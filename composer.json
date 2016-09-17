@@ -1,0 +1,31 @@
+{
+  "name": "neam/php-sie",
+  "description": "PHP port of https://github.com/barsoom/sie",
+  "keywords": [
+    "php",
+    "sie"
+  ],
+  "homepage": "https://github.com/neam/php-sie",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Fredrik Wollsén",
+      "email": "fredrik@neam.se"
+    },
+    {
+      "name": "Contributors of barsoom/sie - https://github.com/barsoom/sie/graphs/contributors"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "sie\\": "src/sie/"
+    }
+  },
+  "require": {
+    "php": ">=5.3.0"
+  },
+  "require-dev": {
+    "codeception/codeception": "~2.2.4"
+  }
+}
