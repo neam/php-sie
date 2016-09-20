@@ -19,32 +19,31 @@ class ParserTest extends \Codeception\Test\Unit
     // tests
     public function testParsesSieDataThatIncludesArrays()
     {
-        $this->markTestIncomplete();
-    }
 
-    /*
-describe Sie::Parser, "parse" do
-  it "parses sie data that includes arrays" do
-    data = <<-DATA
+        $data = <<<DATA
 #VER "LF" 2222 20130101 "Foocorp expense"
 {
 #TRANS 2400 {} -200 20130101 "Foocorp expense"
 #TRANS 4100 {} 180 20130101 "Widgets from foocorp"
 #TRANS 2611 {} -20 20130101 "VAT"
-}
-    DATA
+DATA;
 
-    parser = Sie::Parser.new
-    sie_file = parser.parse(data)
+        $parser = new \sie\Parser();
+        $sie_file = $parser->parse($data);
 
-    voucher_entry = sie_file.entries.first
-    expect(sie_file.entries.size).to eq(1)
-    expect(voucher_entry.attributes["verdatum"]).to eq("20130101")
-    expect(voucher_entry.entries.size).to eq(3)
-    expect(voucher_entry.entries.first.attributes["kontonr"]).to eq("2400")
-  end
+        $voucher_entry = $sie_file->entries[0];
 
-    */
+        $this->assertInstanceOf('\\sie\\parser\\SieFile', $sie_file);
+        $this->assertEquals(1, count($sie_file->entries));
+
+        codecept_debug($voucher_entry);
+
+        $this->assertEquals("20130101", $voucher_entry->attributes->verdatum);
+        $this->assertInstanceOf('\\sie\\parser\\Entry', $voucher_entry);
+        $this->assertEquals("2400", $voucher_entry->entries[0]->attributes->kontonr);
+        $this->assertEquals(3, count($voucher_entry->entries));
+
+    }
 
     public function testHandlesLeadingWhitespace()
     {
@@ -65,9 +64,6 @@ DATA;
 
         $this->assertInstanceOf('\\sie\\parser\\SieFile', $sie_file);
         $this->assertEquals(1, count($sie_file->entries));
-
-        codecept_debug($voucher_entry->entries);
-
         $this->assertInstanceOf('\\sie\\parser\\Entry', $voucher_entry);
         $this->assertEquals(3, count($voucher_entry->entries));
 

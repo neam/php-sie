@@ -22,7 +22,6 @@ class BuildEntry
         $this->lenient = $lenient;
     }
 
-
     public function call()
     {
         if ($this->first_token->known_entry_type()) {
@@ -38,19 +37,22 @@ class BuildEntry
     {
         $entry = $this->build_empty_entry();
 
-            codecept_debug(__METHOD__);
-            codecept_debug(["awt"=>$this->attributes_with_tokens()]);
+        codecept_debug(__METHOD__);
 
+        $attributes_with_tokens = $this->attributes_with_tokens();
+        codecept_debug(["awt" => $attributes_with_tokens]);
 
-        foreach ($this->attributes_with_tokens() as $attr => $attr_tokens) {
+        foreach ($attributes_with_tokens as $attribute_with_tokens) {
+            $attr = $attribute_with_tokens[0];
+            $attr_tokens = $attribute_with_tokens[1];
 
-            codecept_debug(__METHOD__);
+            codecept_debug(__LINE__);
             codecept_debug(compact("attr"));
             codecept_debug(compact("attr_tokens"));
 
             $label = is_array($attr) ? $attr["name"] : $attr;
-            if (is_array($attr_tokens) && count($attr_tokens) === 1) {
-                $entry->attributes[$label] = reset($attr_tokens);
+            if (!is_array($attr)) {
+                $entry->attributes->$label = $attr_tokens;
             } else {
                 $type = $attr["type"];
                 $values = [];
@@ -87,7 +89,7 @@ class BuildEntry
                 $return[] = [$attr_entry_type, $token->value];
             } else {
                 if (!($token instanceof BeginArrayToken)) {
-                    throw new InvalidEntryError("Unexpected token: #" . $token->inspect());
+                    throw new InvalidEntryError("Unexpected token: #" . print_r($token, true));
                 }
 
                 $hash_tokens = [];
