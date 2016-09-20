@@ -1,25 +1,25 @@
 <?php
 
-namespace sie\parser;
+namespace sie\document;
 
-/*
-class Sie::Document
-  class VoucherSeries
-    DEBTOR_INVOICE   = "KF"
-    DEBTOR_PAYMENT   = "KI"
-    SUPPLIER_INVOICE = "LF"
-    SUPPLIER_PAYMENT = "KB"
-    OTHER            = "LV"
+class VoucherSeries
+{
+    const DEBTOR_INVOICE = "KF";
+    const DEBTOR_PAYMENT = "KI";
+    const SUPPLIER_INVOICE = "LF";
+    const SUPPLIER_PAYMENT = "KB";
+    const OTHER = "LV";
 
-   private function self.for(creditor, type) {
-      case type
-      when :invoice
-        creditor ? SUPPLIER_INVOICE : DEBTOR_INVOICE
-      when :payment
-        creditor ? SUPPLIER_PAYMENT : DEBTOR_PAYMENT
-      else
-        OTHER
-      }
+    public function self_for($creditor, $type)
+    {
+        switch ($type) {
+            case "invoice":
+                return $creditor ? static::SUPPLIER_INVOICE : static::DEBTOR_INVOICE;
+            case "payment":
+                return $creditor ? static::SUPPLIER_PAYMENT : static::DEBTOR_PAYMENT;
+            default:
+                return static::OTHER;
+
+        }
     }
-  }
 }

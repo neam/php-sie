@@ -2,59 +2,72 @@
 
 namespace sie\document;
 
-/*
-require "stringio"
-*/
+class Renderer
+{
+    const ENCODING = "CP437";
 
-class Renderer {
-  ENCODING = Encoding::CP437
-
- public function __construct() {
-   $this->io = StringIO.new
-   $this->io.set_encoding(ENCODING);
-  }
-
- public function add_line(label, *values) {
-    append ["##{ label }", *format_values(values)].join(" ")
-  }
-
- public function add_array() {
-    append "{"
-    yield
-    append "}"
-  }
-
- public function render() {
-    io.rewind
-    io.read
-  }
-
-  private $io;
-
- private function append($text) {
-    $this->io->puts(encoded(text));
-  }
-
- private function format_values($values) {
-    $values.map { function($value) {return $this->format_value($value);} }
-  }
-
- private function encoded(text) {
-    text.encode(ENCODING, :invalid => :replace, :undef => :replace, :replace => "?")
-  }
-
- private function format_value(value) {
-    case value
-    when Date
-      value.strftime("%Y%m%d")
-    when Array
-      subvalues = value.map { |subvalue| format_value(subvalue.to_s) }
-      "{#{subvalues.join(' ')}}"
-    when Numeric
-      value.to_s
-    else
-      '"' + value.to_s.gsub('"', '\"') + '"'
+    public function add_line($label, $values)
+    {
+        $this->append("#$label " . implode(" ", $this->format_values($values)));
     }
-  }
+
+    public function add_beginning_of_array()
+    {
+        $this->append("{");
+    }
+
+    public function add_end_of_array()
+    {
+        $this->append("}");
+    }
+
+    public function render()
+    {
+        $this->lines[] = "";
+        return implode("\n", $this->lines);
+    }
+
+    private $lines = [];
+
+    private function append($text)
+    {
+        $this->lines[] = $this->encoded($text);
+    }
+
+    private function format_values($values)
+    {
+        return array_map(
+            function ($value) {
+                return $this->format_value($value);
+            },
+            $values
+        );
+    }
+
+    private function encoded($text)
+    {
+        $current_ctype_locale = setlocale(LC_CTYPE, 0);
+        setlocale(LC_CTYPE, 'POSIX');
+        $encoded = iconv("UTF-8", static::ENCODING . '//TRANSLIT', $text);
+        setlocale(LC_CTYPE, $current_ctype_locale);
+        return $encoded;
+    }
+
+    private function format_value($value)
+    {
+        if ($value instanceof \DateTime) {
+            return $value->format("Ymd");
+        } elseif (is_array($value)) {
+            $subvalues = [];
+            foreach ($value as $subvalue) {
+                $subvalues[] = $this->format_value($subvalue);
+            }
+            return "{" . implode(" ", $subvalues) . "}";
+        } elseif (is_int($value) || ctype_digit($value)) {
+            return (string) $value;
+        } else {
+            return '"' . (string) str_replace('"', '\"', $value) . '"';
+        }
+    }
 
 }

@@ -52,7 +52,7 @@ class Tokenizer
                     throw new Exception(
                         "Unhandled character in line at position #"
                         . $this->scanner->getPosition()
-                        . ": " . $this->scanner->getRemainder()
+                        . ": '" . $this->scanner->getSource() . "' at '" . $this->scanner->getRemainder() . "'"
                     );
             }
 
@@ -120,10 +120,10 @@ class Tokenizer
 
     private function find_quoted_string()
     {
-        $match = $this->scanner->scan('/"[^"]*" /');
+        $match = $this->scanner->scan('/"(\\\\"|[^"])*"/');
 
         if ($match) {
-            return preg_replace('/"\z /', '', preg_replace('/"/', '', $match));
+            return preg_replace('/"$/', '', preg_replace('/^"/', '', $match));
         } else {
             return null;
         }
@@ -136,7 +136,7 @@ class Tokenizer
 
     private function remove_unnecessary_escapes($match)
     {
-        return preg_replace('/\\\\([\\\\"])/', "\\1", $match);
+        return preg_replace('/\\\\([\\\\"])/', "$1", $match);
     }
 
 }

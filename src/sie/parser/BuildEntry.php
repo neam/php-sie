@@ -40,7 +40,7 @@ class BuildEntry
         codecept_debug(__METHOD__);
 
         $attributes_with_tokens = $this->attributes_with_tokens();
-        codecept_debug(["awt" => $attributes_with_tokens]);
+        codecept_debug(compact("attributes_with_tokens"));
 
         foreach ($attributes_with_tokens as $attribute_with_tokens) {
             $attr = $attribute_with_tokens[0];
@@ -56,18 +56,15 @@ class BuildEntry
             } else {
                 $type = $attr["type"];
                 $values = [];
-                foreach ($attr_tokens as $attr_token) {
 
-                    throw new Exception("TODO");
-
+                if (count($attr_tokens) > 0) {
+                    foreach ($attr_tokens as $k => $attr_token) {
+                        $values[$type[$k]] = $attr_token;
+                    }
                 }
-                /*
-                    values = attr_tokens.
-                      each_slice(type.size).
-                      map { |slice| Hash[type.zip(slice)] }
 
-                    entry.attributes[label] = values
-                */
+                $entry->attributes->$label = [$values];
+
             }
         }
 
