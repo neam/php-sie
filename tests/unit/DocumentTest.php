@@ -127,10 +127,10 @@ class DocumentTest extends \Codeception\Test\Unit
 
     protected function sie_file()
     {
-        codecept_debug(__METHOD__);
-        codecept_debug($this->doc());
-        codecept_debug("render result: '" . $this->doc()->render() . "'");
-        codecept_debug((new \sie\Parser())->parse($this->doc()->render()));
+        //codecept_debug(__METHOD__);
+        //codecept_debug($this->doc());
+        //codecept_debug("render result: '" . $this->doc()->render() . "'");
+        //codecept_debug((new \sie\Parser())->parse($this->doc()->render()));
 
         return (new \sie\Parser())->parse($this->doc()->render());
     }
@@ -139,7 +139,6 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testAddsAHeader()
     {
-        return;
         $this->sie_file();
         $this->assertEquals("0", $this->entry_attribute("flagga", "x"));
         $this->assertEquals("Foonomic", $this->entry_attribute("program", "programnamn"));
@@ -148,7 +147,6 @@ class DocumentTest extends \Codeception\Test\Unit
         $this->assertEquals($this->generated_on()->format("Ymd"), $this->entry_attribute("gen", "datum"));
         $this->assertEquals("4", $this->entry_attribute("sietyp", "typnr"));
         $this->assertEquals("Foocorp", $this->entry_attribute("fnamn", "foretagsnamn"));
-
     }
 
     /*
@@ -341,10 +339,10 @@ $this->assertEquals("", $this->indexed_entry_attributes("res", 0)) . not_to eq("
     protected function indexed_entry_attribute($label, $index, $attribute)
     {
         $attributes = $this->indexed_entry_attributes($label, $index);
-        if (!array_key_exists($attribute, $attributes)) {
-            throw new Exception("Unknown attribute $attribute in " . print_r(array_keys($attributes), true));
+        if (!isset($attributes->$attribute)) {
+            throw new Exception("Unknown attribute $attribute in " . print_r(get_class_methods($attributes), true));
         }
-        return $attributes[$attribute];
+        return $attributes->$attribute;
     }
 
     protected function indexed_entry_attributes($label, $index)
@@ -365,7 +363,6 @@ $this->assertEquals("", $this->indexed_entry_attributes("res", 0)) . not_to eq("
         }
         return $entries_with_label[$index];
     }
-
 
 }
 

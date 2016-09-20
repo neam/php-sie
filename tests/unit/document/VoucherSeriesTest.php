@@ -23,7 +23,7 @@ class VoucherSeriesTest extends \Codeception\Test\Unit
         return (new VoucherSeries())->self_for($creditor, $type);
     }
 
-    public function testSelfForProvider()
+    public function selfForProvider()
     {
         return [
             // when on the creditor side with an invoice
@@ -42,7 +42,7 @@ class VoucherSeriesTest extends \Codeception\Test\Unit
     // tests
 
     /**
-     * @dataProvider testSelfForProvider
+     * @dataProvider selfForProvider
      */
     public function testSelfFor($creditor, $type, $expected)
     {

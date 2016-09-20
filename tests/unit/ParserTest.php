@@ -35,8 +35,6 @@ DATA;
         $this->assertInstanceOf('\\sie\\parser\\SieFile', $sie_file);
         $this->assertEquals(1, count($sie_file->entries));
 
-        codecept_debug($voucher_entry);
-
         $this->assertEquals("20130101", $voucher_entry->attributes->verdatum);
         $this->assertInstanceOf('\\sie\\parser\\Entry', $voucher_entry);
         $this->assertEquals("2400", $voucher_entry->entries[0]->attributes->kontonr);

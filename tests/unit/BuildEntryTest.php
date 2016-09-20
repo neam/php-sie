@@ -29,14 +29,37 @@ class BuildEntryTest extends \Codeception\Test\Unit
         $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
         $entry = $buildEntry->call();
 
-        codecept_debug(__METHOD__);
-        codecept_debug($entry);
-
         $this->assertEquals(2400, $entry->attributes->kontonr);
         $this->assertEquals(-200, $entry->attributes->belopp);
         $this->assertEquals(20130101, $entry->attributes->transdat);
         $this->assertEquals("Foocorp expense", $entry->attributes->transtext);
         $this->assertFalse(isset($entry->attributes->kvantitet));
+    }
+
+    public function testCallWithAnUnquotedZeroString()
+    {
+        $line = '#RAR 0 20100101 20101231';
+        $tokenizer = new Tokenizer($line);
+        $tokens = $tokenizer->tokenize();
+        $first_token = array_shift($tokens);
+        $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
+        $entry = $buildEntry->call();
+
+        $this->assertEquals(0, $entry->attributes->arsnr);
+        $this->assertEquals(20100101, $entry->attributes->start);
+        $this->assertEquals(20101231, $entry->attributes->slut);
+    }
+
+    public function testCallWithSimpleAttribute()
+    {
+        $line = '#FLAGGA 0';
+        $tokenizer = new Tokenizer($line);
+        $tokens = $tokenizer->tokenize();
+        $first_token = array_shift($tokens);
+        $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
+        $entry = $buildEntry->call();
+
+        $this->assertEquals(0, $entry->attributes->x);
     }
 
     public function testCallWithAnUnexpectedTokenAtStartOfArray()

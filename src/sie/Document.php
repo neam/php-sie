@@ -49,7 +49,7 @@ class Document
         /**
          * @var \DatePeriod $date_range
          */
-        foreach ($this->data_source->financial_years as $index => $date_range) {
+        foreach ($this->financial_years() as $index => $date_range) {
             $this->renderer()->add_line("RAR", [-$index, $date_range->getStartDate(), $date_range->getEndDate()]);
         }
     }
@@ -136,10 +136,19 @@ class Document
         $description = iconv_substr($opts["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
         $voucher_lines = $opts["voucher_lines"];
         $voucher_series = $opts["series"];
+
+        /*
+      voucher_series = opts.fetch(:series) {
+        creditor = opts.fetch(:creditor)
+        type = opts.fetch(:type)
+        VoucherSeries.for(creditor, type)
+      }
+         */
+
         {
             $creditor = $opts["creditor"];
             $type = $opts["type"];
-            (new VoucherSeries())->for($creditor, $type);
+            (new VoucherSeries())->self_for($creditor, $type);
         }
 
         $this->renderer()->add_line("VER", [$voucher_series, $number, $booked_on, $description]);
@@ -169,7 +178,6 @@ class Document
 
         $this->renderer()->add_end_of_array();
 
-
     }
 
     /** @var Renderer */
@@ -188,12 +196,12 @@ class Document
         $financial_years = $this->data_source->financial_years;
         usort(
             $financial_years,
-            function ($fy1, $fy2) {
-                throw new Exception("TODO");
-                // data_source . financial_years . sort_by {|date_range | date_range . first }.reverse
+            function (\DatePeriod $fy1, \DatePeriod $fy2) {
+                return $fy1->getStartDate() > $fy2->getStartDate();
             }
         );
-        return $financial_years;
+
+        return array_reverse($financial_years);
     }
 
 }

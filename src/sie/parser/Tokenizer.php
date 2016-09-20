@@ -29,31 +29,27 @@ class Tokenizer
 
         while (!$this->scanner->hasTerminated()) {
 
-            switch (true) {
-                case $this->whitespace():
-                    continue;
-                case $match = $this->find_entry():
-                    $tokens[] = new EntryToken($match);
-                    continue;
-                case $this->begin_array():
-                    $tokens[] = new BeginArrayToken();
-                    continue;
-                case $this->end_array():
-                    $tokens[] = new EndArrayToken();
-                    continue;
-                case $match = $this->find_string():
-                    $tokens[] = new StringToken($match);
-                    continue;
-                case $this->end_of_string():
-                    codecept_debug("end of string");
-                    return $tokens;
-                default:
-                    # We shouldn't get here, but if we do we need to bail out, otherwise we get an infinite loop.
-                    throw new Exception(
-                        "Unhandled character in line at position #"
-                        . $this->scanner->getPosition()
-                        . ": '" . $this->scanner->getSource() . "' at '" . $this->scanner->getRemainder() . "'"
-                    );
+            if ($this->whitespace() !== null) {
+                continue;
+            } elseif (($match = $this->find_entry()) !== null) {
+                $tokens[] = new EntryToken($match);
+            } elseif ($this->begin_array() !== null) {
+                $tokens[] = new BeginArrayToken();
+            } elseif ($this->end_array() !== null) {
+                $tokens[] = new EndArrayToken();
+            } elseif (($match = $this->find_string()) !== null) {
+                $tokens[] = new StringToken($match);
+            } elseif ($this->end_of_string()) {
+                break;
+            } else {
+
+                # We shouldn't get here, but if we do we need to bail out, otherwise we get an infinite loop.
+                throw new Exception(
+                    "Unhandled character in line at position #"
+                    . $this->scanner->getPosition()
+                    . ": '" . $this->scanner->getSource() . "' at '" . $this->scanner->getRemainder() . "'"
+                );
+
             }
 
         }
@@ -102,11 +98,11 @@ class Tokenizer
     private function find_string()
     {
         $match = $this->find_quoted_string();
-        if (!$match) {
+        if ($match === null) {
             $match = $this->find_unquoted_string();
         }
 
-        if ($match) {
+        if ($match !== null) {
             return $this->remove_unnecessary_escapes($match);
         } else {
             return null;

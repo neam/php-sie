@@ -127,11 +127,25 @@ class TokenizerTest extends \Codeception\Test\Unit
         );
     }
 
+    public function testHandlesUnquotedZeros()
+    {
+        $tokenizer = new Tokenizer("#FLAGGA 0");
+        $tokens = $tokenizer->tokenize();
+
+        $this->assertEquals(
+            [
+                ["EntryToken", "FLAGGA"],
+                ["StringToken", "0"]
+            ],
+            $this->token_table_for($tokens)
+        );
+    }
+
     public function testRejectsControlCharacters()
     {
         $codes_not_allowed = range(0, 8) + range(10, 31) + [127];
         foreach ($codes_not_allowed as $x) {
-            $str = chr($x); // [x].pack("C")
+            $str = pack("C", $x); // [x].pack("C")
             $tokenizer = new Tokenizer($str);
             //expect{tokenizer.tokenize}.to raise_error /Unhandled character/
         }

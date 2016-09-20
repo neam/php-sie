@@ -24,7 +24,6 @@ class LineParserTest extends \Codeception\Test\Unit
         $parser = new LineParser('#TRANS 2400 {"3" "5"} -200 20130101 "Foocorp expense"');
         $entry = $parser->parse();
         $this->assertEquals("trans", $entry->label);
-        codecept_debug($entry->attributes);
         $this->assertEquals(
             (object) [
                 "kontonr" => "2400",

@@ -37,23 +37,17 @@ class BuildEntry
     {
         $entry = $this->build_empty_entry();
 
-        codecept_debug(__METHOD__);
-
         $attributes_with_tokens = $this->attributes_with_tokens();
-        codecept_debug(compact("attributes_with_tokens"));
 
         foreach ($attributes_with_tokens as $attribute_with_tokens) {
             $attr = $attribute_with_tokens[0];
             $attr_tokens = $attribute_with_tokens[1];
 
-            codecept_debug(__LINE__);
-            codecept_debug(compact("attr"));
-            codecept_debug(compact("attr_tokens"));
-
-            $label = is_array($attr) ? $attr["name"] : $attr;
             if (!is_array($attr)) {
+                $label = $attr;
                 $entry->attributes->$label = $attr_tokens;
             } else {
+                $label = $attr["name"];
                 $type = $attr["type"];
                 $values = [];
 
