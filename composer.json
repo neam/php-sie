@@ -23,7 +23,8 @@
     }
   },
   "require": {
-    "php": ">=5.3.0"
+    "php": ">=5.3.0",
+    "strscan/strscan": "~1.0.3"
   },
   "require-dev": {
     "codeception/codeception": "~2.2.4"

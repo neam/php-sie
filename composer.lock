@@ -4,22 +4,63 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "bf341d49ce4b8669f65ac380c5df6402",
-    "content-hash": "3711b5340756b2a4886180b22661f88b",
-    "packages": [],
-    "packages-dev": [
+    "hash": "6c8659cae44100f534e89405f717e02d",
+    "content-hash": "4f8b73c832998c9623eab1a367546c1b",
+    "packages": [
         {
-            "name": "behat/gherkin",
-            "version": "v4.4.2",
+            "name": "strscan/strscan",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Behat/Gherkin.git",
-                "reference": "d26757dc970e67b50ed0ee47b95273daeb84fea6"
+                "url": "https://github.com/nramenta/strscan-php.git",
+                "reference": "f8b9a5dc7f654508f2c20e33191d5ad5b782c83f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/d26757dc970e67b50ed0ee47b95273daeb84fea6",
-                "reference": "d26757dc970e67b50ed0ee47b95273daeb84fea6",
+                "url": "https://api.github.com/repos/nramenta/strscan-php/zipball/f8b9a5dc7f654508f2c20e33191d5ad5b782c83f",
+                "reference": "f8b9a5dc7f654508f2c20e33191d5ad5b782c83f",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "StrScan": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nofriandi Ramenta",
+                    "email": "nramenta@gmail.com"
+                }
+            ],
+            "description": "Simple string tokenizer for lexical scanning operations",
+            "keywords": [
+                "lexer",
+                "scanner"
+            ],
+            "time": "2014-06-21 20:07:03"
+        }
+    ],
+    "packages-dev": [
+        {
+            "name": "behat/gherkin",
+            "version": "v4.4.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Behat/Gherkin.git",
+                "reference": "cf8cc94647101e02a33d690245896d83d880aea1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Behat/Gherkin/zipball/cf8cc94647101e02a33d690245896d83d880aea1",
+                "reference": "cf8cc94647101e02a33d690245896d83d880aea1",
                 "shasum": ""
             },
             "require": {
@@ -65,7 +106,7 @@
                 "gherkin",
                 "parser"
             ],
-            "time": "2016-09-03 07:28:57"
+            "time": "2016-09-18 12:16:14"
         },
         {
             "name": "codeception/codeception",
