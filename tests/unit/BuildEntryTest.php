@@ -37,12 +37,10 @@ class BuildEntryTest extends \Codeception\Test\Unit
         $this->assertEquals(20130101, $entry->attributes->transdat);
         $this->assertEquals("Foocorp expense", $entry->attributes->transtext);
         $this->assertFalse(isset($entry->attributes->kvantitet));
-
     }
 
     public function testCallWithAnUnexpectedTokenAtStartOfArray()
     {
-
         $this->expectException('sie\parser\InvalidEntryError');
         $line = '#TRANS 2400 [] -200 20130101 "Foocorp expense"';
         $tokenizer = new Tokenizer($line);
@@ -50,6 +48,5 @@ class BuildEntryTest extends \Codeception\Test\Unit
         $first_token = array_shift($tokens);
         $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
         $buildEntry->call();
-
     }
 }

@@ -19,14 +19,12 @@ class DocumentTest extends \Codeception\Test\Unit
 
     protected function financial_years()
     {
-
         $interval = new DateInterval('P1D');
         return [
             new DatePeriod(new DateTime('2011-01-01'), $interval, new DateTime('2011-12-31')),
             new DatePeriod(new DateTime('2012-01-01'), $interval, new DateTime('2012-12-31')),
             new DatePeriod(new DateTime('2013-01-01'), $interval, new DateTime('2013-12-31')),
         ];
-
     }
 
     protected function generated_on()

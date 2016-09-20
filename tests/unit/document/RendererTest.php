@@ -21,13 +21,11 @@ class RendererTest extends \Codeception\Test\Unit
     // tests
     public function testReplacesInputOfTheWrongEncodingWithQuestionmark()
     {
-
         $renderer = new Renderer();
         $renderer->add_line("Hello ☃", [1]);
         $output = $renderer->render();
 
         $this->assertEquals("#Hello ? 1\n", $output);
-
     }
 
 }

@@ -37,7 +37,6 @@ class LineParserTest extends \Codeception\Test\Unit
             ],
             $entry->attributes
         );
-
     }
 
     protected function context_unknown_entry_line()
@@ -47,16 +46,13 @@ class LineParserTest extends \Codeception\Test\Unit
 
     public function testUsingALenientParserItRaisesNoErrorWhenEncounteringUnknownEntries()
     {
-
         $line = $this->context_unknown_entry_line();
         $parser = new LineParser($line, $lenient = true);
         $parser->parse();
-
     }
 
     public function testUsingAStrictParserItRaisesErrorWhenEncounteringUnknownEntries()
     {
-
         $line = $this->context_unknown_entry_line();
         $parser = new LineParser($line);
 
@@ -64,7 +60,6 @@ class LineParserTest extends \Codeception\Test\Unit
         $this->expectExceptionMessageRegExp('/Unknown entry type/');
 
         $parser->parse();
-
     }
 
 }

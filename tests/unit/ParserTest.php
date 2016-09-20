@@ -19,7 +19,6 @@ class ParserTest extends \Codeception\Test\Unit
     // tests
     public function testParsesSieDataThatIncludesArrays()
     {
-
         $data = <<<DATA
 #VER "LF" 2222 20130101 "Foocorp expense"
 {
@@ -42,12 +41,10 @@ DATA;
         $this->assertInstanceOf('\\sie\\parser\\Entry', $voucher_entry);
         $this->assertEquals("2400", $voucher_entry->entries[0]->attributes->kontonr);
         $this->assertEquals(3, count($voucher_entry->entries));
-
     }
 
     public function testHandlesLeadingWhitespace()
     {
-
         $data = <<<DATA
 #VER "LF" 2222 20130101 "Foocorp expense"
 {
@@ -66,7 +63,6 @@ DATA;
         $this->assertEquals(1, count($sie_file->entries));
         $this->assertInstanceOf('\\sie\\parser\\Entry', $voucher_entry);
         $this->assertEquals(3, count($voucher_entry->entries));
-
     }
 
 }
