@@ -1,0 +1,4 @@
+class_name: IntegrationGuy
+modules:
+    enabled:
+        - \Helper\Integration

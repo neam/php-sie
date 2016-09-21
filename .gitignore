@@ -1,0 +1,4 @@
+vendor
+tests/_log/*-*
+tests/_helpers/_generated/*.php
+tests/_helpers/*Guy.php
