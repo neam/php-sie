@@ -11,11 +11,14 @@ class DocumentTest extends \Codeception\Test\Unit
     protected function _before()
     {
         date_default_timezone_set('UTC');
+        $this->sie_file = null;
     }
 
     protected function _after()
     {
     }
+
+    protected $sie_file;
 
     protected function financial_years()
     {
@@ -105,7 +108,7 @@ class DocumentTest extends \Codeception\Test\Unit
         ];
     }
 
-    protected function doc()
+    protected function doc($contextModifyingCallback = null)
     {
         $data_source = new TestDataSource(
             [
@@ -122,24 +125,32 @@ class DocumentTest extends \Codeception\Test\Unit
             ]
         );
 
+        if (is_callable($contextModifyingCallback)) {
+            $contextModifyingCallback($data_source);
+        }
+
         return (new \sie\Document($data_source));
     }
 
-    protected function sie_file()
+    protected function set_test_sie_file($contextModifyingCallback = null)
     {
         //codecept_debug(__METHOD__);
-        //codecept_debug($this->doc());
-        //codecept_debug("render result: '" . $this->doc()->render() . "'");
-        //codecept_debug((new \sie\Parser())->parse($this->doc()->render()));
 
-        return (new \sie\Parser())->parse($this->doc()->render());
+        $doc = $this->doc($contextModifyingCallback);
+
+        //codecept_debug($doc);
+        //codecept_debug("render result: '" . $doc->render() . "'");
+
+        $this->sie_file = (new \sie\Parser())->parse($doc->render());
+
+        //codecept_debug($this->sie_file);
     }
 
     // tests
 
     public function testAddsAHeader()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertEquals("0", $this->entry_attribute("flagga", "x"));
         $this->assertEquals("Foonomic", $this->entry_attribute("program", "programnamn"));
         $this->assertEquals("3.11", $this->entry_attribute("program", "version"));
@@ -151,7 +162,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testHasAccountingYears()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertEquals("0", $this->indexed_entry_attribute("rar", 0, "arsnr"));
         $this->assertEquals("20130101", $this->indexed_entry_attribute("rar", 0, "start"));
         $this->assertEquals("20131231", $this->indexed_entry_attribute("rar", 0, "slut"));
@@ -165,7 +176,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testHasAccounts()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertEquals(
             (object) ["kontonr" => "1500", "kontonamn" => "Customer ledger"],
             $this->indexed_entry_attributes("konto", 0)
@@ -174,7 +185,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testHasDimensions()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertEquals(
             (object) ["dimensionsnr" => "6", "namn" => "Project"],
             $this->indexed_entry_attributes("dim", 0)
@@ -183,7 +194,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testHasObjects()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertEquals(
             (object) ["dimensionsnr" => "6", "objektnr" => "1", "objektnamn" => "Education"],
             $this->indexed_entry_attributes("objekt", 0)
@@ -193,7 +204,7 @@ class DocumentTest extends \Codeception\Test\Unit
     // ingående balans
     public function testHasBalancesBroughtForward()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertNotEquals(
             (object) ["arsnr" => "0", "konto" => "9999", "saldo" => ""],
             $this->indexed_entry_attributes("ib", 0)
@@ -228,7 +239,7 @@ class DocumentTest extends \Codeception\Test\Unit
     // utgående balans
     public function testHasBalancesCarriedForward()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertNotEquals(
             (object) ["arsnr" => "0", "konto" => "9999", "saldo" => ""],
             $this->indexed_entry_attributes("ub", 0)
@@ -263,7 +274,7 @@ class DocumentTest extends \Codeception\Test\Unit
     // saldo för resultatkonto
     public function testHasClosingAccountBalances()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertNotEquals(
             (object) ["ars" => "0", "konto" => "9999", "saldo" => ""],
             $this->indexed_entry_attributes("res", 0)
@@ -284,7 +295,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testHasVouchers()
     {
-        $this->sie_file();
+        $this->set_test_sie_file();
         $this->assertEquals(
             (object) [
                 "serie" => "KF",
@@ -349,90 +360,74 @@ class DocumentTest extends \Codeception\Test\Unit
 
     public function testTruncatesReallyLongDescriptions()
     {
-        $this->sie_file();
-
-        /*
-              context "with really long descriptions" do
-
-            protected function accounts()
-            {
-                return [
+        $this->set_test_sie_file(
+            function (TestDataSource &$data_source) {
+                // with really long descriptions
+                $data_source->accounts = [
                     [
                         "number" => 1500,
-                        "description" => "Customer ledger",
+                        # Make sure that the description exceeds the limit (100 chars).
+                        "description" => str_repeat("k", 101)
                     ]
                 ];
-            }
-
-
-                let(:accounts) {
-                  [
-                    number" =>1500, description" =>"k" * 101  # Make sure that the description exceeds the limit (100 chars).
-                  ]
-                }
-                let(:vouchers) {
-                  [
-                    build_voucher(
-                      description ="d" * 101,
-                      voucher_lines =[
-                        build_voucher_line(description ="v" * 101),
-                        build_voucher_line(description ="Payout line 2"),
-                      ]
+                $data_source->vouchers = [
+                    $this->build_voucher(
+                        [
+                            "description" => str_repeat("d", 101),
+                            "voucher_lines" => [
+                                $this->build_voucher_line(["description" => str_repeat("v", 101)]),
+                                $this->build_voucher_line(["description" => "Payout line 2"]),
+                            ]
+                        ]
                     )
-                  ]
-                }
+                ];
+            }
+        );
 
-                it "truncates the descriptions" do
-                  $this->assertEquals(["kontonr" => "1500", "kontonamn" => "k" * 100], $this->indexed_entry_attributes("konto", 0))
-                  $this->assertEquals(["d" * 100], $this->indexed_entry("ver", 0)->attributes["vertext"]))
-                  $this->assertEquals(["v" * 100], $this->indexed_voucher_entries(0)[0]->attributes["transtext"]))
-                }
-              }
-         *
-         */
+        $this->assertEquals(
+            (object) ["kontonr" => "1500", "kontonamn" => str_repeat("k", 100)],
+            $this->indexed_entry_attributes("konto", 0)
+        );
+        $this->assertEquals(str_repeat("d", 100), $this->indexed_entry("ver", 0)->attributes->vertext);
+        $this->assertEquals(str_repeat("v", 100), $this->indexed_voucher_entries(0)[0]->attributes->transtext);
     }
 
     public function testEnsuresThereAreAtLeastTwoLinesWithAZeroedSingleVoucherLine()
     {
-        $this->sie_file();
+        $this->set_test_sie_file(
+            function (TestDataSource &$data_source) {
+                // with a zeroed single voucher line
+                $data_source->vouchers = [
+                    $this->build_voucher(
+                        [
+                            "voucher_lines" => [
+                                $this->build_voucher_line(["amount" => 0])
+                            ]
+                        ]
+                    )
+                ];
+            }
+        );
 
-        /*
-      context "with a zeroed single voucher line" do
-        let(:vouchers) {
-          [
-            build_voucher(voucher_lines =[ build_voucher_line(amount =0) ])
-          ]
-        }
-
-        it "ensures there are at least two lines" do
-          $this->assertEquals(2, $this->indexed_voucher_entries(0).size);
-        }
-      }
-
-         *
-         */
-
+        $this->assertEquals(2, count($this->indexed_voucher_entries(0)));
     }
 
     public function testReadsTheSeriesFromTheVoucherWithASeriesDefined()
     {
-        $this->sie_file();
-
-        /*
-
-          context "with a series defined" do
-            let(:vouchers) {
-              [
-                build_voucher(series ="X"),
-              ]
+        $this->set_test_sie_file(
+            function (TestDataSource &$data_source) {
+                // with a series defined
+                $data_source->vouchers = [
+                    $this->build_voucher(
+                        [
+                            "series" => "X"
+                        ]
+                    )
+                ];
             }
+        );
 
-            it "reads the series from the voucher" do
-              $this->assertEquals("X", $this->indexed_entry("ver", 0)->attributes["serie"]);
-            }
-          }
-          */
-
+        $this->assertEquals("X", $this->indexed_entry("ver", 0)->attributes->serie);
     }
 
     protected function build_voucher($attributes)
@@ -448,7 +443,7 @@ class DocumentTest extends \Codeception\Test\Unit
                 $this->build_voucher_line(),
             ],
         ];
-        return array_merge($attributes, $defaults);
+        return array_merge($defaults, $attributes);
     }
 
     protected function build_voucher_line($attributes = [])
@@ -459,7 +454,7 @@ class DocumentTest extends \Codeception\Test\Unit
             "booked_on" => DateTime::createFromFormat("Ymd", (new DateTime())->format("Ymd")),
             "description" => "A voucher line"
         ];
-        return array_merge($attributes, $defaults);
+        return array_merge($defaults, $attributes);
     }
 
     protected function entry_attribute($label, $attribute)
@@ -488,7 +483,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     protected function indexed_entry($label, $index)
     {
-        $entries_with_label = $this->sie_file()->entries_with_label($label);
+        $entries_with_label = $this->sie_file->entries_with_label($label);
         if (!array_key_exists($index, $entries_with_label)) {
             throw new Exception("No entry with label " . print_r($label, true) . " found!");
         }

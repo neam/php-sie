@@ -68,7 +68,7 @@ class Document
         /**
          * @var \DatePeriod $date_range
          */
-        foreach ($this->data_source->financial_years as $index => $date_range) {
+        foreach ($this->financial_years() as $index => $date_range) {
             $this->add_balance_rows(
                 "IB",
                 -$index,
