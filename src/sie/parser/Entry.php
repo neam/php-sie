@@ -15,4 +15,5 @@ class Entry
         $this->attributes = (object) [];
         $this->entries = [];
     }
+
 }

@@ -1,7 +1,10 @@
 <?php
+
 namespace sie\parser;
 
-class EntryTypes {
+class EntryTypes
+{
+
     static public $ENTRY_TYPES = [
         "adress" => ['kontakt', 'utdelningsadr', 'postadr', 'tel'],
         "bkod" => ['SNI-kod'],
@@ -89,4 +92,5 @@ class EntryTypes {
         "valuta" => ['valutakod'],
         "ver" => ['serie', 'vernr', 'verdatum', 'vertext', 'regdatum', 'sign']
     ];
+
 }

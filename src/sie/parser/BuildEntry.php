@@ -126,6 +126,7 @@ class BuildEntry
     {
         throw new InvalidEntryError("Unknown entry type: " . $this->first_token->label() . "");
     }
+
 }
 
 class InvalidEntryError extends Exception

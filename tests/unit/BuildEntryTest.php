@@ -120,4 +120,5 @@ class BuildEntryTest extends \Codeception\Test\Unit
         $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
         $buildEntry->call();
     }
+
 }

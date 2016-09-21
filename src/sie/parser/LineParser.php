@@ -32,4 +32,5 @@ class LineParser
         $build_entry = new BuildEntry($this->line, $first_token, $tokens, $this->lenient);
         return $build_entry->call();
     }
+
 }

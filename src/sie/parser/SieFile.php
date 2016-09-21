@@ -1,4 +1,5 @@
 <?php
+
 namespace sie\parser;
 
 class SieFile

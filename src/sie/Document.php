@@ -5,7 +5,6 @@ namespace sie;
 use sie\document\DataSource;
 use sie\document\VoucherSeries;
 use sie\document\Renderer;
-use Exception;
 
 class Document
 {
