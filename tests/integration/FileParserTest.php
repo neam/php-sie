@@ -21,8 +21,8 @@ class FileParserTest extends \Codeception\Test\Unit
     {
 
         $parser = new \sie\Parser();
-        $data = $this->open_file('sie_file.se');
-        $sie_file = $parser->parse($data);
+        $file_contents = $this->open_file('sie_file.se');
+        $sie_file = $parser->parseSieFileContents($file_contents);
 
         $this->assertInstanceOf('\\sie\\parser\\SieFile', $sie_file);
         $this->assertEquals(19, count($sie_file->entries));
@@ -40,8 +40,8 @@ class FileParserTest extends \Codeception\Test\Unit
     {
 
         $parser = new \sie\Parser(["lenient" => true]);
-        $data = $this->open_file('sie_file_with_unknown_entries.se');
-        $sie_file = $parser->parse($data);
+        $file_contents = $this->open_file('sie_file_with_unknown_entries.se');
+        $sie_file = $parser->parseSieFileContents($file_contents);
 
         $this->assertInstanceOf('\\sie\\parser\\SieFile', $sie_file);
         $this->assertEquals(2, count($sie_file->entries_with_label("ver")));
@@ -52,12 +52,12 @@ class FileParserTest extends \Codeception\Test\Unit
     {
 
         $parser = new \sie\Parser();
-        $data = $this->open_file('sie_file_with_unknown_entries.se');
+        $file_contents = $this->open_file('sie_file_with_unknown_entries.se');
 
         $this->expectException('Exception');
         $this->expectExceptionMessageRegExp('/Unknown entry type: momskod\. Pass \'lenient: true\'/');
 
-        $sie_file = $parser->parse($data);
+        $sie_file = $parser->parseSieFileContents($file_contents);
 
     }
 

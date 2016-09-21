@@ -50,6 +50,54 @@ class BuildEntryTest extends \Codeception\Test\Unit
         $this->assertEquals(20101231, $entry->attributes->slut);
     }
 
+    public function testCallWithShortDimensionsArray()
+    {
+        $line = '#TRANS 3311 {"1" "1"} -387.00';
+        $tokenizer = new Tokenizer($line);
+        $tokens = $tokenizer->tokenize();
+        $first_token = array_shift($tokens);
+        $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
+        $entry = $buildEntry->call();
+
+        $this->assertEquals(3311, $entry->attributes->kontonr);
+        $this->assertEquals(
+            [
+                [
+                    "dimensionsnr" => 1,
+                    "objektnr" => 1,
+                ],
+            ],
+            $entry->attributes->objektlista
+        );
+        $this->assertEquals("-387.00", $entry->attributes->belopp);
+    }
+
+    public function testCallWithLongDimensionsArray()
+    {
+        $line = '#TRANS 3311 {"1" "1" "6" "1"} -387.00';
+        $tokenizer = new Tokenizer($line);
+        $tokens = $tokenizer->tokenize();
+        $first_token = array_shift($tokens);
+        $buildEntry = new BuildEntry($line, $first_token, $tokens, false);
+        $entry = $buildEntry->call();
+
+        $this->assertEquals(3311, $entry->attributes->kontonr);
+        $this->assertEquals(
+            [
+                [
+                    "dimensionsnr" => 1,
+                    "objektnr" => 1,
+                ],
+                [
+                    "dimensionsnr" => 1,
+                    "objektnr" => 6,
+                ],
+            ],
+            $entry->attributes->objektlista
+        );
+        $this->assertEquals("-387.00", $entry->attributes->belopp);
+    }
+
     public function testCallWithSimpleAttribute()
     {
         $line = '#FLAGGA 0';

@@ -2,6 +2,7 @@
 
 namespace sie;
 
+use sie\document\CP437Encoding;
 use sie\parser\SieFile;
 use sie\parser\LineParser;
 use sie\parser\InvalidEntryError;
@@ -21,6 +22,12 @@ class Parser
     public function __construct($options = [])
     {
         $this->options = $options;
+    }
+
+    public function parseSieFileContents($fileContents)
+    {
+        $data = CP437Encoding::convertFromCP437ToUTF8($fileContents);
+        return $this->parse($data);
     }
 
     public function parse($data)

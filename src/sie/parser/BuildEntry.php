@@ -49,12 +49,25 @@ class BuildEntry
             } else {
                 $label = $attr["name"];
                 $type = $attr["type"];
+                $entry->attributes->$label = [];
 
                 if (count($attr_tokens) > 0) {
-                    foreach ($attr_tokens as $k => $attr_token) {
-                        $values[$type[$k]] = $attr_token;
+                    $entry->attributes->$label = [];
+                    // the attribute tokens are supplied pair wise, ie 1 2 3 4 -> [1=>2], [3=>4]
+                    $pairs = (int) count($attr_tokens) / 2;
+                    $many = isset($attr["many"]) && $attr["many"];
+                    if (!$many && $pairs > 1) {
+                        throw new InvalidEntryError(
+                            "More than one pair of attribute tokens for $label on line: " . $this->line
+                        );
                     }
-                    $entry->attributes->$label = [$values];
+                    $values = [];
+                    for ($pair = 0; $pair < $pairs; $pair++) {
+                        $values[$type[0]] = $attr_tokens[$pair];
+                        $values[$type[1]] = $attr_tokens[$pair + 1];
+                        $entry->attributes->$label[] = $values;
+                    }
+
                 } else {
                     $entry->attributes->$label = [];
                 }

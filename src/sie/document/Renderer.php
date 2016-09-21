@@ -4,8 +4,6 @@ namespace sie\document;
 
 class Renderer
 {
-    const ENCODING = "CP437";
-
     public function add_line($label, $values)
     {
         $this->append("#$label " . implode(" ", $this->format_values($values)));
@@ -48,7 +46,7 @@ class Renderer
     {
         $current_ctype_locale = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'POSIX');
-        $encoded = iconv("UTF-8", static::ENCODING . '//TRANSLIT', $text);
+        $encoded = CP437Encoding::convertFromUTF8ToCP437($text);
         setlocale(LC_CTYPE, $current_ctype_locale);
         return $encoded;
     }
