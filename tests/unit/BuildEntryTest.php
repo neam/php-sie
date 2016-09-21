@@ -64,7 +64,7 @@ class BuildEntryTest extends \Codeception\Test\Unit
 
     public function testCallWithAnUnexpectedTokenAtStartOfArray()
     {
-        $this->expectException('sie\parser\InvalidEntryError');
+        $this->expectException('sie\\parser\\InvalidEntryError');
         $line = '#TRANS 2400 [] -200 20130101 "Foocorp expense"';
         $tokenizer = new Tokenizer($line);
         $tokens = $tokenizer->tokenize();

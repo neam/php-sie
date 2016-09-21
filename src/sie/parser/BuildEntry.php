@@ -80,7 +80,7 @@ class BuildEntry
                 $return[] = [$attr_entry_type, $token->value];
             } else {
                 if (!($token instanceof BeginArrayToken)) {
-                    throw new InvalidEntryError("Unexpected token: #" . print_r($token, true));
+                    throw new InvalidEntryError("Unexpected token: " . print_r($token, true));
                 }
 
                 $hash_tokens = [];
@@ -111,7 +111,7 @@ class BuildEntry
 
     private function raise_invalid_entry_error()
     {
-        throw new InvalidEntryError("Unknown entry type: #" . $this->first_token->label() . "");
+        throw new InvalidEntryError("Unknown entry type: " . $this->first_token->label() . "");
     }
 }
 
