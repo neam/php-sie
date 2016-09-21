@@ -123,7 +123,7 @@ class Document
 
     private function add_vouchers()
     {
-        foreach ($this->data_source->each_voucher as $voucher) {
+        foreach ($this->data_source->vouchers as $voucher) {
             $this->add_voucher($voucher);
         }
     }
@@ -135,20 +135,12 @@ class Document
         $booked_on = $opts["booked_on"];
         $description = iconv_substr($opts["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
         $voucher_lines = $opts["voucher_lines"];
-        $voucher_series = $opts["series"];
-
-        /*
-      voucher_series = opts.fetch(:series) {
-        creditor = opts.fetch(:creditor)
-        type = opts.fetch(:type)
-        VoucherSeries.for(creditor, type)
-      }
-         */
-
-        {
+        if (array_key_exists("series", $opts)) {
+            $voucher_series = $opts["series"];
+        } else {
             $creditor = $opts["creditor"];
             $type = $opts["type"];
-            (new VoucherSeries())->self_for($creditor, $type);
+            $voucher_series = (new VoucherSeries())->self_for($creditor, $type);
         }
 
         $this->renderer()->add_line("VER", [$voucher_series, $number, $booked_on, $description]);
@@ -159,7 +151,11 @@ class Document
             $account_number = $line["account_number"];
             $amount = $line["amount"];
             $booked_on = $line["booked_on"];
-            $dimensions = $line["dimensions"];
+            if (array_key_exists("dimensions", $line)) {
+                $dimensions = $line["dimensions"];
+            } else {
+                $dimensions = [];
+            }
 
             # Some SIE-importers (fortnox) cannot handle descriptions longer than 200 characters,
             # but the specification has no limit.

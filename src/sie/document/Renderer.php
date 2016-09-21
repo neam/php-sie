@@ -59,7 +59,8 @@ class Renderer
             return $value->format("Ymd");
         } elseif (is_array($value)) {
             $subvalues = [];
-            foreach ($value as $subvalue) {
+            foreach ($value as $key => $subvalue) {
+                $subvalues[] = $this->format_value($key);
                 $subvalues[] = $this->format_value($subvalue);
             }
             return "{" . implode(" ", $subvalues) . "}";

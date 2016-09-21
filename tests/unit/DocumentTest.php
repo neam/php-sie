@@ -149,136 +149,254 @@ class DocumentTest extends \Codeception\Test\Unit
         $this->assertEquals("Foocorp", $this->entry_attribute("fnamn", "foretagsnamn"));
     }
 
-    /*
-      it "has accounting years" do
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 0, "arsnr")).to eq("0;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 0, "start")) . to eq(
-        "20130101;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 0, "slut"))20131231;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 1, "arsnr")).to eq(" - 1;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 1, "start")) . to eq(
-        "20120101;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 1, "slut"))20121231;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 2, "arsnr")).to eq(" - 2;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 2, "start")) . to eq(
-        "20110101;
-        $this->assertEquals("", $this->indexed_entry_attribute("rar", 2, "slut"))20111231;
-      }
+    public function testHasAccountingYears()
+    {
+        $this->sie_file();
+        $this->assertEquals("0", $this->indexed_entry_attribute("rar", 0, "arsnr"));
+        $this->assertEquals("20130101", $this->indexed_entry_attribute("rar", 0, "start"));
+        $this->assertEquals("20131231", $this->indexed_entry_attribute("rar", 0, "slut"));
+        $this->assertEquals("-1", $this->indexed_entry_attribute("rar", 1, "arsnr"));
+        $this->assertEquals("20120101", $this->indexed_entry_attribute("rar", 1, "start"));
+        $this->assertEquals("20121231", $this->indexed_entry_attribute("rar", 1, "slut"));
+        $this->assertEquals("-2", $this->indexed_entry_attribute("rar", 2, "arsnr"));
+        $this->assertEquals("20110101", $this->indexed_entry_attribute("rar", 2, "start"));
+        $this->assertEquals("20111231", $this->indexed_entry_attribute("rar", 2, "slut"));
+    }
 
-      it "has accounts" do
-        $this->assertEquals("", $this->indexed_entry_attributes("konto", 0)).to eq("kontonr" => "1500", "kontonamn" => "Customer ledger;
-      }
-
-it "has dimensions" do
-$this->assertEquals("", $this->indexed_entry_attributes("dim", 0)).to eq("dimensionsnr" => "6", "namn" => "Project;
-      }
-
-      it "has objects" do
-        $this->assertEquals("", $this->indexed_entry_attributes("objekt", 0)).to eq("dimensionsnr" => "6", "objektnr" => "1", "objektnamn" => "Education;
-}
-
-it "has balances brought forward (ingående balans)" do
-$this->assertEquals("", $this->indexed_entry_attributes("ib", 0)) . not_to eq("arsnr" =>  "0", "konto" => "9999", "saldo" => ";
-        $this->assertEquals("", $this->indexed_entry_attributes("ib", 0))arsnr" =>  "0", "konto" => "1500", "saldo" => "1600.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("ib", 1))arsnr" =>  "0", "konto" => "2400", "saldo" => "2500.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("ib", 2))arsnr" => "-1", "konto" => "1500", "saldo" => "1600.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("ib", 3))arsnr" => "-1", "konto" => "2400", "saldo" => "2500.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("ib", 4))arsnr" => "-2", "konto" => "1500", "saldo" => "1600.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("ib", 5))arsnr" => "-2", "konto" => "2400", "saldo" => "2500.0;
-      }
-
-      it "has balances carried forward(utgående balans)" do
-        $this->assertEquals("", $this->indexed_entry_attributes("ub", 0)).not_to eq("arsnr" =>  "0", "konto" => "9999", "saldo" => ";
+    public function testHasAccounts()
+    {
+        $this->sie_file();
         $this->assertEquals(
-            "",
+            (object) ["kontonr" => "1500", "kontonamn" => "Customer ledger"],
+            $this->indexed_entry_attributes("konto", 0)
+        );
+    }
+
+    public function testHasDimensions()
+    {
+        $this->sie_file();
+        $this->assertEquals(
+            (object) ["dimensionsnr" => "6", "namn" => "Project"],
+            $this->indexed_entry_attributes("dim", 0)
+        );
+    }
+
+    public function testHasObjects()
+    {
+        $this->sie_file();
+        $this->assertEquals(
+            (object) ["dimensionsnr" => "6", "objektnr" => "1", "objektnamn" => "Education"],
+            $this->indexed_entry_attributes("objekt", 0)
+        );
+    }
+
+    // ingående balans
+    public function testHasBalancesBroughtForward()
+    {
+        $this->sie_file();
+        $this->assertNotEquals(
+            (object) ["arsnr" => "0", "konto" => "9999", "saldo" => ""],
+            $this->indexed_entry_attributes("ib", 0)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "0", "konto" => "1500", "saldo" => "1600.0"],
+            $this->indexed_entry_attributes("ib", 0)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "0", "konto" => "2400", "saldo" => "2500.0"],
+            $this->indexed_entry_attributes("ib", 1)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "-1", "konto" => "1500", "saldo" => "1600.0"],
+            $this->indexed_entry_attributes("ib", 2)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "-1", "konto" => "2400", "saldo" => "2500.0"],
+            $this->indexed_entry_attributes("ib", 3)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "-2", "konto" => "1500", "saldo" => "1600.0"],
+            $this->indexed_entry_attributes("ib", 4)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "-2", "konto" => "2400", "saldo" => "2500.0"],
+            $this->indexed_entry_attributes("ib", 5)
+        );
+
+    }
+
+    // utgående balans
+    public function testHasBalancesCarriedForward()
+    {
+        $this->sie_file();
+        $this->assertNotEquals(
+            (object) ["arsnr" => "0", "konto" => "9999", "saldo" => ""],
             $this->indexed_entry_attributes("ub", 0)
-        )arsnr" =>  "0", "konto" => "1500", "saldo" => "4600.0;
+        );
         $this->assertEquals(
-            "",
+            (object) ["arsnr" => "0", "konto" => "1500", "saldo" => "4600.0"],
+            $this->indexed_entry_attributes("ub", 0)
+        );
+        $this->assertEquals(
+            (object) ["arsnr" => "0", "konto" => "2400", "saldo" => "5500.0"],
             $this->indexed_entry_attributes("ub", 1)
-        )arsnr" =>  "0", "konto" => "2400", "saldo" => "5500.0;
+        );
         $this->assertEquals(
-            "",
+            (object) ["arsnr" => "-1", "konto" => "1500", "saldo" => "4600.0"],
             $this->indexed_entry_attributes("ub", 2)
-        )arsnr" => " - 1", "konto" => "1500", "saldo" => "4600.0;
+        );
         $this->assertEquals(
-            "",
+            (object) ["arsnr" => "-1", "konto" => "2400", "saldo" => "5500.0"],
             $this->indexed_entry_attributes("ub", 3)
-        )arsnr" => " - 1", "konto" => "2400", "saldo" => "5500.0;
+        );
         $this->assertEquals(
-            "",
+            (object) ["arsnr" => "-2", "konto" => "1500", "saldo" => "4600.0"],
             $this->indexed_entry_attributes("ub", 4)
-        )arsnr" => " - 2", "konto" => "1500", "saldo" => "4600.0;
+        );
         $this->assertEquals(
-            "",
+            (object) ["arsnr" => "-2", "konto" => "2400", "saldo" => "5500.0"],
             $this->indexed_entry_attributes("ub", 5)
-        )arsnr" => " - 2", "konto" => "2400", "saldo" => "5500.0;
-      }
+        );
 
-      it "has closing account balances (saldo för resultatkonto)" do
-$this->assertEquals("", $this->indexed_entry_attributes("res", 0)) . not_to eq("ars" =>  "0", "konto" => "9999", "saldo" =>  ";
-        $this->assertEquals("", $this->indexed_entry_attributes("res", 0))ars" =>  "0", "konto" => "3100", "saldo" =>  "6200.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("res", 1))ars" => "-1", "konto" => "3100", "saldo" =>  "6200.0;
-        $this->assertEquals("", $this->indexed_entry_attributes("res", 2))ars" => "-2", "konto" => "3100", "saldo" =>  "6200.0;
-      }
+    }
 
-      it "has vouchers" do
-        $this->assertEquals("", $this->indexed_entry("ver", 0).attributes).to eq(
-          "serie" => "KF", "vernr" => "1",
-          "verdatum" => "20110903", "vertext" => "Invoice 1"
-        )
-        $this->assertEquals("", $this->indexed_voucher_entries(0)[0].attributes).to eq(
-          "kontonr" => "1500", "belopp" =>  "512.0",
-          "transdat" => "20110903", "transtext" => "Item 1",
-          "objektlista" => [{"dimensionsnr" => "6", "objektnr" => "1"}]
-        )
-        $this->assertEquals("", $this->indexed_voucher_entries(0)[1].attributes).to eq(
-          "kontonr" => "3100", "belopp" => " - 512.0",
-          "transdat" => "20110903", "transtext" => "Item 1",
-          "objektlista" => [{"dimensionsnr" => "6", "objektnr" => "1"}]
-        )
+    // saldo för resultatkonto
+    public function testHasClosingAccountBalances()
+    {
+        $this->sie_file();
+        $this->assertNotEquals(
+            (object) ["ars" => "0", "konto" => "9999", "saldo" => ""],
+            $this->indexed_entry_attributes("res", 0)
+        );
+        $this->assertEquals(
+            (object) ["ars" => "0", "konto" => "3100", "saldo" => "6200.0"],
+            $this->indexed_entry_attributes("res", 0)
+        );
+        $this->assertEquals(
+            (object) ["ars" => "-1", "konto" => "3100", "saldo" => "6200.0"],
+            $this->indexed_entry_attributes("res", 1)
+        );
+        $this->assertEquals(
+            (object) ["ars" => "-2", "konto" => "3100", "saldo" => "6200.0"],
+            $this->indexed_entry_attributes("res", 2)
+        );
+    }
 
-        $this->assertEquals("", $this->indexed_entry("ver", 1).attributes).to eq(
-          "serie" => "KB", "vernr" => "2",
-          "verdatum" => "20120831", "vertext" => "Payout 1"
-        )
-        $this->assertEquals("", $this->indexed_voucher_entries(1)[0].attributes).to eq(
-          "kontonr" => "2400", "belopp" =>  "256.0",
-          "transdat" => "20120831", "transtext" => "Payout line 1",
-          "objektlista" => []
-        )
-        $this->assertEquals("", $this->indexed_voucher_entries(1)[1].attributes).to eq(
-          "kontonr" => "1970", "belopp" => " - 256.0",
-          "transdat" => "20120831", "transtext" => "Payout line 2",
-          "objektlista" => []
-        )
-      }
+    public function testHasVouchers()
+    {
+        $this->sie_file();
+        $this->assertEquals(
+            (object) [
+                "serie" => "KF",
+                "vernr" => "1",
+                "verdatum" => "20110903",
+                "vertext" => "Invoice 1"
+            ],
+            $this->indexed_entry("ver", 0)->attributes
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "1500",
+                "belopp" => "512.0",
+                "transdat" => "20110903",
+                "transtext" => "Item 1",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(0)[0]->attributes
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "3100",
+                "belopp" => "-512.0",
+                "transdat" => "20110903",
+                "transtext" => "Item 1",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(0)[1]->attributes
+        );
 
-      context "with really long descriptions" do
-        let(:accounts) {
-          [
-            number" =>1500, description" =>"k" * 101  # Make sure that the description exceeds the limit (100 chars).
-          ]
-        }
-        let(:vouchers) {
-          [
-            build_voucher(
-              description ="d" * 101,
-              voucher_lines =[
-                build_voucher_line(description ="v" * 101),
-                build_voucher_line(description ="Payout line 2"),
-              ]
-            )
-          ]
-        }
+        $this->assertEquals(
+            (object) [
+                "serie" => "KB",
+                "vernr" => "2",
+                "verdatum" => "20120831",
+                "vertext" => "Payout 1"
+            ],
+            $this->indexed_entry("ver", 1)->attributes
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "2400",
+                "belopp" => "256.0",
+                "transdat" => "20120831",
+                "transtext" => "Payout line 1",
+                "objektlista" => []
+            ],
+            $this->indexed_voucher_entries(1)[0]->attributes
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "1970",
+                "belopp" => "-256.0",
+                "transdat" => "20120831",
+                "transtext" => "Payout line 2",
+                "objektlista" => []
+            ],
+            $this->indexed_voucher_entries(1)[1]->attributes
+        );
 
-        it "truncates the descriptions" do
-          $this->assertEquals("", $this->indexed_entry_attributes("konto", 0)).to eq("kontonr" => "1500", "kontonamn" => "k" * 100)
-          $this->assertEquals("", $this->indexed_entry("ver", 0).attributes["vertext"]).to eq("d" * 100)
-          $this->assertEquals("", $this->indexed_voucher_entries(0)[0].attributes["transtext"]).to eq("v" * 100)
-        }
-      }
+    }
 
+    public function testTruncatesReallyLongDescriptions()
+    {
+        $this->sie_file();
+
+        /*
+              context "with really long descriptions" do
+
+            protected function accounts()
+            {
+                return [
+                    [
+                        "number" => 1500,
+                        "description" => "Customer ledger",
+                    ]
+                ];
+            }
+
+
+                let(:accounts) {
+                  [
+                    number" =>1500, description" =>"k" * 101  # Make sure that the description exceeds the limit (100 chars).
+                  ]
+                }
+                let(:vouchers) {
+                  [
+                    build_voucher(
+                      description ="d" * 101,
+                      voucher_lines =[
+                        build_voucher_line(description ="v" * 101),
+                        build_voucher_line(description ="Payout line 2"),
+                      ]
+                    )
+                  ]
+                }
+
+                it "truncates the descriptions" do
+                  $this->assertEquals(["kontonr" => "1500", "kontonamn" => "k" * 100], $this->indexed_entry_attributes("konto", 0))
+                  $this->assertEquals(["d" * 100], $this->indexed_entry("ver", 0)->attributes["vertext"]))
+                  $this->assertEquals(["v" * 100], $this->indexed_voucher_entries(0)[0]->attributes["transtext"]))
+                }
+              }
+         *
+         */
+    }
+
+    public function testEnsuresThereAreAtLeastTwoLinesWithAZeroedSingleVoucherLine()
+    {
+        $this->sie_file();
+
+        /*
       context "with a zeroed single voucher line" do
         let(:vouchers) {
           [
@@ -287,22 +405,35 @@ $this->assertEquals("", $this->indexed_entry_attributes("res", 0)) . not_to eq("
         }
 
         it "ensures there are at least two lines" do
-          $this->assertEquals("", $this->indexed_voucher_entries(0).size).to eq(2)
+          $this->assertEquals(2, $this->indexed_voucher_entries(0).size);
         }
       }
 
-      context "with a series defined" do
-        let(:vouchers) {
-          [
-            build_voucher(series ="X"),
-          ]
-        }
+         *
+         */
 
-        it "reads the series from the voucher" do
-          $this->assertEquals("", $this->indexed_entry("ver", 0).attributes["serie"]).to eq("X;
-        }
-      }
-      */
+    }
+
+    public function testReadsTheSeriesFromTheVoucherWithASeriesDefined()
+    {
+        $this->sie_file();
+
+        /*
+
+          context "with a series defined" do
+            let(:vouchers) {
+              [
+                build_voucher(series ="X"),
+              ]
+            }
+
+            it "reads the series from the voucher" do
+              $this->assertEquals("X", $this->indexed_entry("ver", 0)->attributes["serie"]);
+            }
+          }
+          */
+
+    }
 
     protected function build_voucher($attributes)
     {
@@ -369,23 +500,10 @@ $this->assertEquals("", $this->indexed_entry_attributes("res", 0)) . not_to eq("
 class TestDataSource extends \sie\document\DataSource
 {
 
-    # vouchers is not part of the expected interface so making it private.
-    #
-    # Sie::Document uses #each_voucher so that you can build documents for huge sets of vouchers
-    # by loading them in batches.
-    private $vouchers;
-
     function __construct($hash = [])
     {
         foreach ($hash as $k => $v) {
             $this->$k = $v;
-        }
-    }
-
-    function each_voucher($callback)
-    {
-        foreach ($this->vouchers as $voucher) {
-            $callback($voucher);
         }
     }
 

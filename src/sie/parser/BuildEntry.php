@@ -49,15 +49,15 @@ class BuildEntry
             } else {
                 $label = $attr["name"];
                 $type = $attr["type"];
-                $values = [];
 
                 if (count($attr_tokens) > 0) {
                     foreach ($attr_tokens as $k => $attr_token) {
                         $values[$type[$k]] = $attr_token;
                     }
+                    $entry->attributes->$label = [$values];
+                } else {
+                    $entry->attributes->$label = [];
                 }
-
-                $entry->attributes->$label = [$values];
 
             }
         }

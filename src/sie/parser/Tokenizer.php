@@ -127,7 +127,7 @@ class Tokenizer
 
     private function find_unquoted_string()
     {
-        return $this->scanner->scan('/\S+/');
+        return $this->scanner->scan('/(\\\\"|[^"{}\s])+/');
     }
 
     private function remove_unnecessary_escapes($match)

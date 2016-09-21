@@ -14,7 +14,7 @@ class DataSource {
     public $closing_account_numbers = [];
 
     public $balance_before;
-    public $each_voucher = [];
+    public $vouchers = [];
 
     public $financial_years = [];
 

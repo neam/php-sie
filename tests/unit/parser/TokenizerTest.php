@@ -141,6 +141,27 @@ class TokenizerTest extends \Codeception\Test\Unit
         );
     }
 
+    public function testHandlesTransactionWithDimensionArray() {
+        $tokenizer = new Tokenizer('#TRANS 1500 {6 1} "512" 20110903 "Item 1"');
+        $tokens = $tokenizer->tokenize();
+
+        $this->assertEquals(
+            [
+                ["EntryToken", "TRANS"],
+                ["StringToken", "1500"],
+                ["BeginArrayToken", ""],
+                ["StringToken", "6"],
+                ["StringToken", "1"],
+                ["EndArrayToken", ""],
+                ["StringToken", "512"],
+                ["StringToken", "20110903"],
+                ["StringToken", "Item 1"],
+            ],
+            $this->token_table_for($tokens)
+        );
+
+    }
+
     public function testRejectsControlCharacters()
     {
         $codes_not_allowed = range(0, 8) + range(10, 31) + [127];
