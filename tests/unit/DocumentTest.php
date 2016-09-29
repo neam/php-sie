@@ -494,16 +494,9 @@ class DocumentTest extends \Codeception\Test\Unit
 
 class TestDataSource extends \sie\document\DataSource
 {
-
-    function __construct($hash = [])
-    {
-        foreach ($hash as $k => $v) {
-            $this->$k = $v;
-        }
-    }
-
     function balance_before($account_number, \DateTime $date)
     {
+        $parent_return = parent::balance_before($account_number, $date);
         if ($account_number == 9999) {
             # So we can test empty balances.
             return null;

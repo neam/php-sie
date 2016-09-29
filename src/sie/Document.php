@@ -189,6 +189,11 @@ class Document
     private function financial_years()
     {
         $financial_years = $this->data_source->financial_years;
+
+        if (empty($financial_years)) {
+            return [];
+        }
+
         usort(
             $financial_years,
             function (\DatePeriod $fy1, \DatePeriod $fy2) {

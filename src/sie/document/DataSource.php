@@ -2,7 +2,8 @@
 
 namespace sie\document;
 
-class DataSource {
+class DataSource
+{
 
     public $program;
     public $program_version;
@@ -19,5 +20,17 @@ class DataSource {
     public $financial_years = [];
 
     public $dimensions = [];
+
+    function __construct($hash = [])
+    {
+        foreach ($hash as $k => $v) {
+            $this->$k = $v;
+        }
+    }
+
+    function balance_before($account_number, \DateTime $date)
+    {
+        return 99999;
+    }
 
 }
