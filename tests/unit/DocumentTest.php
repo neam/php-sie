@@ -496,7 +496,6 @@ class TestDataSource extends \sie\document\DataSource
 {
     function balance_before($account_number, \DateTime $date)
     {
-        $parent_return = parent::balance_before($account_number, $date);
         if ($account_number == 9999) {
             # So we can test empty balances.
             return null;

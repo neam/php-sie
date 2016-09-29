@@ -37,11 +37,11 @@ class Document
     private function add_header()
     {
         $this->renderer()->add_line("FLAGGA", [0]);
-        $this->renderer()->add_line("PROGRAM", [$this->data_source->program, $this->data_source->program_version]);
+        $this->renderer()->add_line("PROGRAM", [$this->data_source->program(), $this->data_source->program_version()]);
         $this->renderer()->add_line("FORMAT", ["PC8"]);
-        $this->renderer()->add_line("GEN", [$this->data_source->generated_on]);
+        $this->renderer()->add_line("GEN", [$this->data_source->generated_on()]);
         $this->renderer()->add_line("SIETYP", [4]);
-        $this->renderer()->add_line("FNAMN", [$this->data_source->company_name]);
+        $this->renderer()->add_line("FNAMN", [$this->data_source->company_name()]);
     }
 
     private function add_financial_years()
@@ -56,7 +56,7 @@ class Document
 
     private function add_accounts()
     {
-        foreach ($this->data_source->accounts as $account) {
+        foreach ($this->data_source->accounts() as $account) {
             $number = $account["number"];
             $description = iconv_substr($account["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
             $this->renderer()->add_line("KONTO", [$number, $description]);
@@ -72,19 +72,19 @@ class Document
             $this->add_balance_rows(
                 "IB",
                 -$index,
-                $this->data_source->balance_account_numbers,
+                $this->data_source->balance_account_numbers(),
                 $date_range->getStartDate()
             );
             $this->add_balance_rows(
                 "UB",
                 -$index,
-                $this->data_source->balance_account_numbers,
+                $this->data_source->balance_account_numbers(),
                 $date_range->getEndDate()
             );
             $this->add_balance_rows(
                 "RES",
                 -$index,
-                $this->data_source->closing_account_numbers,
+                $this->data_source->closing_account_numbers(),
                 $date_range->getEndDate()
             );
         }
@@ -107,7 +107,7 @@ class Document
 
     private function add_dimensions()
     {
-        foreach ($this->data_source->dimensions as $dimension) {
+        foreach ($this->data_source->dimensions() as $dimension) {
 
             $dimension_number = $dimension["number"];
             $dimension_description = $dimension["description"];
@@ -123,7 +123,7 @@ class Document
 
     private function add_vouchers()
     {
-        foreach ($this->data_source->vouchers as $voucher) {
+        foreach ($this->data_source->vouchers() as $voucher) {
             $this->add_voucher($voucher);
         }
     }
@@ -189,7 +189,7 @@ class Document
 
     private function financial_years()
     {
-        $financial_years = $this->data_source->financial_years;
+        $financial_years = $this->data_source->financial_years();
 
         if (empty($financial_years)) {
             return [];

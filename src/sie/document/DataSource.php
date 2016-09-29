@@ -2,7 +2,7 @@
 
 namespace sie\document;
 
-class DataSource
+abstract class DataSource
 {
 
     public $program;
@@ -14,7 +14,8 @@ class DataSource
     public $balance_account_numbers = [];
     public $closing_account_numbers = [];
 
-    public $balance_before;
+    protected $account_balances = [];
+
     public $vouchers = [];
 
     public $financial_years = [];
@@ -28,9 +29,86 @@ class DataSource
         }
     }
 
-    function balance_before($account_number, \DateTime $date)
+    /**
+     * @return mixed
+     */
+    public function program()
     {
-        return 99999;
+        return $this->program;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function program_version()
+    {
+        return $this->program_version;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function generated_on()
+    {
+        return $this->generated_on;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function company_name()
+    {
+        return $this->company_name;
+    }
+
+    /**
+     * @return array
+     */
+    public function accounts()
+    {
+        return $this->accounts;
+    }
+
+    /**
+     * @return array
+     */
+    public function balance_account_numbers()
+    {
+        return $this->balance_account_numbers;
+    }
+
+    /**
+     * @return array
+     */
+    public function closing_account_numbers()
+    {
+        return $this->closing_account_numbers;
+    }
+
+    abstract public function balance_before($account_number, \DateTime $date);
+
+    /**
+     * @return array
+     */
+    public function vouchers()
+    {
+        return $this->vouchers;
+    }
+
+    /**
+     * @return array
+     */
+    public function financial_years()
+    {
+        return $this->financial_years;
+    }
+
+    /**
+     * @return array
+     */
+    public function dimensions()
+    {
+        return $this->dimensions;
     }
 
 }
