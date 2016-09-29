@@ -24,13 +24,14 @@ class Document
 
     public function render()
     {
+        $this->renderer = null;
         $this->add_header();
         $this->add_financial_years();
         $this->add_accounts();
         $this->add_dimensions();
         $this->add_balances();
         $this->add_vouchers();
-        return $this->renderer->render();
+        return $this->renderer()->render();
     }
 
     private function add_header()
