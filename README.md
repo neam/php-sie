@@ -12,6 +12,7 @@ Check the files in tests/unit/*Test.php for usage examples.
 To run the tests, step into the directory of this extension and run:
 
     composer install
+    vendor/bin/codecept build
     vendor/bin/codecept run
 
 Tests sample output:
