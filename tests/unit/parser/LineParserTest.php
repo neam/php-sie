@@ -40,7 +40,7 @@ class LineParserTest extends \Codeception\Test\Unit
 
     protected function context_unknown_entry_line()
     {
-        return "#MOMSKOD 2611 10";
+        return "#FOO 2611 99";
     }
 
     public function testUsingALenientParserItRaisesNoErrorWhenEncounteringUnknownEntries()

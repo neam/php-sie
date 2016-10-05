@@ -72,6 +72,9 @@ class Document
             if (array_key_exists("sru", $account)) {
                 $this->renderer()->add_line("SRU", [$number, $account["sru"]]);
             }
+            if (array_key_exists("momskod", $account)) {
+                $this->renderer()->add_line("MOMSKOD", [$number, $account["momskod"]]);
+            }
         }
     }
 

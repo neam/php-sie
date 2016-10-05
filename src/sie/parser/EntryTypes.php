@@ -20,6 +20,7 @@ class EntryTypes
         "konto" => ['kontonr', 'kontonamn'],
         "kptyp" => ['typ'],
         "ktyp" => ['kontonr', 'kontotyp'],
+        "momskod" => ['kontonr', 'momskod'], // momskod is not part of the official SIE standard, but enough software vendors use it to be considered part of the de facto SIE standard
         "objekt" => ['dimensionsnr', 'objektnr', 'objektnamn'],
         "oib" => [
             'arsnr',

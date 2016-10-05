@@ -55,7 +55,7 @@ class FileParserTest extends \Codeception\Test\Unit
         $file_contents = $this->open_file('sie_file_with_unknown_entries.se');
 
         $this->expectException('Exception');
-        $this->expectExceptionMessageRegExp('/Unknown entry type: momskod\. Pass \'lenient: true\'/');
+        $this->expectExceptionMessageRegExp('/Unknown entry type: foo\. Pass \'lenient: true\'/');
 
         $sie_file = $parser->parseSieFileContents($file_contents);
 

@@ -18,7 +18,7 @@
 #KONTO 2610 "Utgaende moms, oreducerad "
 #KTYP 2610 S
 #SRU 2610 7369
-#MOMSKOD 2610 10
+#FOO 2610 99
 #VER A 1 20130101 "Invoice" 20120105
 {
    #TRANS 1510 {} -200 20130101 "Coffee machine"
