@@ -88,7 +88,41 @@ class DocumentTest extends \Codeception\Test\Unit
                         "amount" => -256.5,
                     ],
                 ]
-            ]
+            ],
+            [
+                "creditor" => false,
+                "type" => "invoice",
+                "number" => 3,
+                "booked_on" => (new DateTime())->setDate(2012, 9, 1),
+                "description" => "Invoice 2",
+                "voucher_lines" => [
+                    [
+                        "changed_on" => (new DateTime())->setDate(2012, 10, 1),
+                        "changed_by" => "James",
+                        "account_number" => 1501,
+                        "type" => "btrans",
+                        "amount" => 512.0,
+                        "description" => "Item 1",
+                        "dimensions" => [6 => 1]
+                    ],
+                    [
+                        "account_number" => 3100,
+                        "amount" => -512.0,
+                        "booked_on" => (new DateTime())->setDate(2012, 9, 1),
+                        "description" => "Item 1",
+                        "dimensions" => [6 => 1]
+                    ],
+                    [
+                        "changed_on" => (new DateTime())->setDate(2012, 10, 1),
+                        "changed_by" => "James",
+                        "account_number" => 1500,
+                        "type" => "rtrans",
+                        "amount" => 512.0,
+                        "description" => "Item 1",
+                        "dimensions" => [6 => 1]
+                    ],
+                ]
+            ],
         ];
     }
 
@@ -349,6 +383,90 @@ class DocumentTest extends \Codeception\Test\Unit
                 "objektlista" => []
             ],
             $this->indexed_voucher_entries(1)[1]->attributes
+        );
+
+        $this->assertEquals(
+            (object) [
+                "serie" => "KF",
+                "vernr" => "3",
+                "verdatum" => "20120901",
+                "vertext" => "Invoice 2"
+            ],
+            $this->indexed_entry("ver", 2)->attributes
+        );
+        $this->assertEquals(
+            "btrans",
+            $this->indexed_voucher_entries(2)[0]->label
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "1501",
+                "belopp" => "512.0",
+                "transdat" => "20121001",
+                "transtext" => "Item 1",
+                "kvantitet" => "",
+                "sign" => "James",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(2)[0]->attributes
+        );
+        $this->assertEquals(
+            "trans",
+            $this->indexed_voucher_entries(2)[1]->label
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "1501",
+                "belopp" => "512.0",
+                "transdat" => "",
+                "transtext" => "Item 1",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(2)[1]->attributes
+        );
+        $this->assertEquals(
+            "trans",
+            $this->indexed_voucher_entries(2)[2]->label
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "3100",
+                "belopp" => "-512.0",
+                "transdat" => "20120901",
+                "transtext" => "Item 1",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(2)[2]->attributes
+        );
+        $this->assertEquals(
+            "rtrans",
+            $this->indexed_voucher_entries(2)[3]->label
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "1500",
+                "belopp" => "512.0",
+                "transdat" => "20121001",
+                "transtext" => "Item 1",
+                "kvantitet" => "",
+                "sign" => "James",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(2)[3]->attributes
+        );
+        $this->assertEquals(
+            "trans",
+            $this->indexed_voucher_entries(2)[4]->label
+        );
+        $this->assertEquals(
+            (object) [
+                "kontonr" => "1500",
+                "belopp" => "512.0",
+                "transdat" => "",
+                "transtext" => "Item 1",
+                "objektlista" => [["dimensionsnr" => "6", "objektnr" => "1"]]
+            ],
+            $this->indexed_voucher_entries(2)[4]->attributes
         );
 
     }

@@ -37,3 +37,11 @@
 #TRANS 2400 {} 256.50 "" "Payout line 1"
 #TRANS 1970 {} -256.50
 }
+#VER KF 3 20120901 "Invoice 2"
+{
+#BTRANS 1501 {6 1} 512.00 20121001 "Item 1" "" James
+#TRANS 1501 {6 1} 512.00 "" "Item 1"
+#TRANS 3100 {6 1} -512.00 20120901 "Item 1"
+#RTRANS 1500 {6 1} 512.00 20121001 "Item 1" "" James
+#TRANS 1500 {6 1} 512.00 "" "Item 1"
+}

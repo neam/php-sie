@@ -187,6 +187,28 @@ class Document
                 $description = null;
             }
 
+            if (array_key_exists("type", $line)) {
+                $type = strtoupper($line["type"]);
+            } else {
+                $type = "TRANS";
+            }
+
+            if ($type === "BTRANS" || $type === "RTRANS") {
+
+                if (array_key_exists("changed_by", $line)) {
+                    $changed_by = $line["changed_by"];
+                } else {
+                    $changed_by = null;
+                }
+
+                if (array_key_exists("changed_on", $line)) {
+                    $changed_on = $line["changed_on"];
+                } else {
+                    $changed_on = null;
+                }
+
+                $this->renderer()->add_line($type, [$account_number, $dimensions, $amount, $changed_on, $description, null, $changed_by]);
+            }
             $this->renderer()->add_line("TRANS", [$account_number, $dimensions, $amount, $booked_on, $description]);
 
             # Some consumers of SIE cannot handle single voucher lines (fortnox), so add another empty one to make
