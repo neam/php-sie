@@ -168,16 +168,24 @@ class Document
         foreach ($voucher_lines as $line) {
             $account_number = $line["account_number"];
             $amount = $this->formatAmount($line["amount"]);
+            if (array_key_exists("booked_on", $line)) {
             $booked_on = $line["booked_on"];
+            } else {
+                $booked_on = null;
+            }
             if (array_key_exists("dimensions", $line)) {
                 $dimensions = $line["dimensions"];
             } else {
                 $dimensions = [];
             }
 
+            if (array_key_exists("description", $line)) {
             # Some SIE-importers (fortnox) cannot handle descriptions longer than 200 characters,
             # but the specification has no limit.
             $description = iconv_substr($line["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
+            } else {
+                $description = null;
+            }
 
             $this->renderer()->add_line("TRANS", [$account_number, $dimensions, $amount, $booked_on, $description]);
 

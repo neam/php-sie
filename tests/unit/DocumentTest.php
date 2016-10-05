@@ -81,14 +81,11 @@ class DocumentTest extends \Codeception\Test\Unit
                     [
                         "account_number" => 2400,
                         "amount" => 256.5,
-                        "booked_on" => (new DateTime())->setDate(2012, 8, 31),
                         "description" => "Payout line 1"
                     ],
                     [
                         "account_number" => 1970,
                         "amount" => -256.5,
-                        "booked_on" => (new DateTime())->setDate(2012, 8, 31),
-                        "description" => "Payout line 2"
                     ],
                 ]
             ]
@@ -339,7 +336,7 @@ class DocumentTest extends \Codeception\Test\Unit
             (object) [
                 "kontonr" => "2400",
                 "belopp" => "256.5",
-                "transdat" => "20120831",
+                "transdat" => "",
                 "transtext" => "Payout line 1",
                 "objektlista" => []
             ],
@@ -349,8 +346,8 @@ class DocumentTest extends \Codeception\Test\Unit
             (object) [
                 "kontonr" => "1970",
                 "belopp" => "-256.5",
-                "transdat" => "20120831",
-                "transtext" => "Payout line 2",
+                "transdat" => "",
+                "transtext" => "",
                 "objektlista" => []
             ],
             $this->indexed_voucher_entries(1)[1]->attributes

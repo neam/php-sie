@@ -62,7 +62,7 @@ class Renderer
                 $subvalues[] = $this->format_value($subvalue);
             }
             return "{" . implode(" ", $subvalues) . "}";
-        } elseif (!preg_match('/\\s/', $value) && $value !== "") {
+        } elseif (!preg_match('/\\s/', $value) && $value !== "" && $value !== null) {
             return (string) $value;
         } else {
             return '"' . (string) str_replace('"', '\"', $value) . '"';
