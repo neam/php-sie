@@ -9,6 +9,8 @@ abstract class DataSource implements IDataSource
     public $program_version;
     public $generated_on;
     public $company_name;
+    public $company_orgnr;
+    public $company_address;
     public $accounts = [];
     public $balance_account_numbers = [];
     public $closing_account_numbers = [];
@@ -53,6 +55,24 @@ abstract class DataSource implements IDataSource
     public function company_name()
     {
         return $this->company_name;
+    }
+
+    /**
+     * Optional
+     * @return mixed
+     */
+    public function company_orgnr()
+    {
+        return $this->company_orgnr;
+    }
+
+    /**
+     * Optional
+     * @return mixed
+     */
+    public function company_address()
+    {
+        return $this->company_address;
     }
 
     /**

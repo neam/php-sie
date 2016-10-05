@@ -42,6 +42,12 @@ class Document
         $this->renderer()->add_line("GEN", [$this->data_source->generated_on()]);
         $this->renderer()->add_line("SIETYP", [4]);
         $this->renderer()->add_line("FNAMN", [$this->data_source->company_name()]);
+        if (is_callable([$this->data_source, "company_orgnr"])) {
+            $this->renderer()->add_line("ORGNR", [$this->data_source->company_orgnr()]);
+        }
+        if (is_callable([$this->data_source, "company_address"])) {
+            $this->renderer()->add_line("ADRESS", [$this->data_source->company_address()]);
+        }
     }
 
     private function add_financial_years()
