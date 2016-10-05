@@ -5,8 +5,8 @@ namespace sie\parser;
 class LineParser
 {
 
-    private $line;
-    private $lenient;
+    protected $line;
+    protected $lenient;
 
     public function __construct($line, $lenient = null)
     {
@@ -21,13 +21,13 @@ class LineParser
         return $this->build_entry($first_token, $tokens);
     }
 
-    private function tokenize($line)
+    protected function tokenize($line)
     {
         $tokenizer = new Tokenizer($line);
         return $tokenizer->tokenize();
     }
 
-    private function build_entry($first_token, $tokens)
+    protected function build_entry($first_token, $tokens)
     {
         $build_entry = new BuildEntry($this->line, $first_token, $tokens, $this->lenient);
         return $build_entry->call();

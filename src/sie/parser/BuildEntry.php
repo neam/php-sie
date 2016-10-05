@@ -33,7 +33,7 @@ class BuildEntry
         }
     }
 
-    private function build_complete_entry()
+    protected function build_complete_entry()
     {
         $entry = $this->build_empty_entry();
 
@@ -78,7 +78,7 @@ class BuildEntry
         return $entry;
     }
 
-    private function attributes_with_tokens()
+    protected function attributes_with_tokens()
     {
         $return = [];
         foreach ($this->line_entry_type() as $attr_entry_type) {
@@ -111,18 +111,18 @@ class BuildEntry
 
     }
 
-    private function build_empty_entry()
+    protected function build_empty_entry()
     {
         $entry = new Entry($this->first_token->label());
         return $entry;
     }
 
-    private function line_entry_type()
+    protected function line_entry_type()
     {
         return $this->first_token->entry_type();
     }
 
-    private function raise_invalid_entry_error()
+    protected function raise_invalid_entry_error()
     {
         throw new InvalidEntryError("Unknown entry type: " . $this->first_token->label() . "");
     }

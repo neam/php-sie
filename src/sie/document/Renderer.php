@@ -25,14 +25,14 @@ class Renderer
         return implode("\n", $this->lines);
     }
 
-    private $lines = [];
+    protected $lines = [];
 
-    private function append($text)
+    protected function append($text)
     {
         $this->lines[] = $this->encoded($text);
     }
 
-    private function format_values($values)
+    protected function format_values($values)
     {
         return array_map(
             function ($value) {
@@ -42,7 +42,7 @@ class Renderer
         );
     }
 
-    private function encoded($text)
+    protected function encoded($text)
     {
         $current_ctype_locale = setlocale(LC_CTYPE, 0);
         setlocale(LC_CTYPE, 'POSIX');
@@ -51,7 +51,7 @@ class Renderer
         return $encoded;
     }
 
-    private function format_value($value)
+    protected function format_value($value)
     {
         if ($value instanceof \DateTime) {
             return $value->format("Ymd");

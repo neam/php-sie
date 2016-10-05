@@ -34,7 +34,7 @@ class Document
         return $this->renderer()->render();
     }
 
-    private function add_header()
+    protected function add_header()
     {
         $this->renderer()->add_line("FLAGGA", [0]);
         $this->renderer()->add_line("PROGRAM", [$this->data_source->program(), $this->data_source->program_version()]);
@@ -50,7 +50,7 @@ class Document
         }
     }
 
-    private function add_financial_years()
+    protected function add_financial_years()
     {
         /**
          * @var \DatePeriod $date_range
@@ -60,7 +60,7 @@ class Document
         }
     }
 
-    private function add_accounts()
+    protected function add_accounts()
     {
         foreach ($this->data_source->accounts() as $account) {
             $number = $account["number"];
@@ -78,7 +78,7 @@ class Document
         }
     }
 
-    private function add_balances()
+    protected function add_balances()
     {
         /**
          * @var \DatePeriod $date_range
@@ -105,7 +105,7 @@ class Document
         }
     }
 
-    private function add_balance_rows($label, $year_index, $account_numbers, $date)
+    protected function add_balance_rows($label, $year_index, $account_numbers, $date)
     {
         foreach ($account_numbers as $account_number) {
             $balance = $this->data_source->balance_before($account_number, $date);
@@ -120,7 +120,7 @@ class Document
         }
     }
 
-    private function add_dimensions()
+    protected function add_dimensions()
     {
         foreach ($this->data_source->dimensions() as $dimension) {
 
@@ -136,14 +136,14 @@ class Document
         }
     }
 
-    private function add_vouchers()
+    protected function add_vouchers()
     {
         foreach ($this->data_source->vouchers() as $voucher) {
             $this->add_voucher($voucher);
         }
     }
 
-    private function add_voucher($opts)
+    protected function add_voucher($opts)
     {
 
         $number = $opts["number"];
@@ -192,9 +192,9 @@ class Document
     }
 
     /** @var Renderer */
-    private $renderer;
+    protected $renderer;
 
-    private function renderer()
+    protected function renderer()
     {
         if (!$this->renderer) {
             $this->renderer = new Renderer();
@@ -202,7 +202,7 @@ class Document
         return $this->renderer;
     }
 
-    private function financial_years()
+    protected function financial_years()
     {
         $financial_years = $this->data_source->financial_years();
 

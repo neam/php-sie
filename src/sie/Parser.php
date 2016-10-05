@@ -17,7 +17,7 @@ class Parser
     # TODO: Could this format knowledge be shared with Tokenizer? It's slightly different there.
     const ENTRY = '/^\\s*#/';
 
-    private $options;
+    protected $options;
 
     public function __construct($options = [])
     {
@@ -62,7 +62,7 @@ class Parser
      * @throws Exception
      * @return \sie\parser\Entry
      */
-    private function parse_line($line)
+    protected function parse_line($line)
     {
 
         try {
@@ -79,7 +79,7 @@ class Parser
 
     }
 
-    private function lenient()
+    protected function lenient()
     {
         return array_key_exists('lenient', $this->options) ? $this->options["lenient"] : null;
     }

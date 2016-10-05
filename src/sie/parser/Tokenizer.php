@@ -13,8 +13,8 @@ use Exception;
 class Tokenizer
 {
 
-    private $line;
-    private $scanner;
+    protected $line;
+    protected $scanner;
 
     public function __construct($line)
     {
@@ -57,7 +57,7 @@ class Tokenizer
         return $tokens;
     }
 
-    private function check_for_control_characters()
+    protected function check_for_control_characters()
     {
         if ($match = preg_match('/(.*?)([\\x00-\\x08\\x0a-\\x1f\\x7f])/', $this->line)) {
             throw new Exception(
@@ -68,12 +68,12 @@ class Tokenizer
         }
     }
 
-    private function whitespace()
+    protected function whitespace()
     {
         return $this->scanner->scan('/[ \t]+/');
     }
 
-    private function find_entry()
+    protected function find_entry()
     {
         $match = $this->scanner->scan('/#\S+/');
 
@@ -84,18 +84,18 @@ class Tokenizer
         }
     }
 
-    private function begin_array()
+    protected function begin_array()
     {
         return $this->scanner->scan('/' . Parser::BEGINNING_OF_ARRAY . '/');
     }
 
 
-    private function end_array()
+    protected function end_array()
     {
         return $this->scanner->scan('/' . Parser::END_OF_ARRAY . '/');
     }
 
-    private function find_string()
+    protected function find_string()
     {
         $match = $this->find_quoted_string();
         if ($match === null) {
@@ -109,12 +109,12 @@ class Tokenizer
         }
     }
 
-    private function end_of_string()
+    protected function end_of_string()
     {
         return $this->scanner->hasTerminated();
     }
 
-    private function find_quoted_string()
+    protected function find_quoted_string()
     {
         $match = $this->scanner->scan('/"(\\\\"|[^"])*"/');
 
@@ -125,12 +125,12 @@ class Tokenizer
         }
     }
 
-    private function find_unquoted_string()
+    protected function find_unquoted_string()
     {
         return $this->scanner->scan('/(\\\\"|[^"{}\s])+/');
     }
 
-    private function remove_unnecessary_escapes($match)
+    protected function remove_unnecessary_escapes($match)
     {
         return preg_replace('/\\\\([\\\\"])/', "$1", $match);
     }
