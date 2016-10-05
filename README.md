@@ -7,11 +7,64 @@ PHP port of https://github.com/barsoom/sie
 
 Current implementation requires PHP 5.6.5 or greater.
 
-Check the files in tests/unit/*Test.php for usage examples.
+## Installation
 
-To run the tests, step into the directory of this extension and run:
+Via composer:
+
+    composer require neam/php-sie
+
+## Generating a SIE file
+
+To generate a SIE document you first need to define a class that implements \sie\document\IDataSource or extends abstract class \sie\document\DataSource.
+
+```php
+$mySieFileDataSource = new MySieFileDataSource($this);
+$sieFileDocument = $mySieFileDataSource->generateSieDocument();
+$sieFileContents = $sieFileDocument->render();
+file_put_contents('sie_file.se', $sieFileContents);
+```
+
+Check the files in tests/unit/*Test.php for more examples.
+
+## Parsing a SIE file
+
+You can parse sie data from anything that responds to `each_line` like a file or a string.
+
+```php
+$file_contents = file_get_contents('sie_file.se');
+$parser = new \sie\Parser();
+$sie_file = $parser->parseSieFileContents($file_contents);
+return $this->parse($data);
+
+// The company name
+puts sie_file.entries_with_label("fnamn").first.attributes["foretagsnamn"]
+
+// The first account number
+puts sie_file.entries_with_label("konto").first.attributes["kontonr"]
+```
+
+The parser expects file contents in CP437 encoding (the official encoding of the SIE file format). If you want to parse UTF8 strings, use the "parse" method:  
+
+```php
+$sie_file = $parser->parse($utf8_string);
+```
+
+By default the parser will raise an error if it encounters unknown entry types. Use the `lenient` option to avoid this:
+
+```php
+$parser = new \sie\Parser(["lenient" => true]);
+```
+
+Check the files in tests/integration/*Test.php for more examples.
+
+## Developing
+
+First time setup:
 
     composer install
+
+Running tests:
+
     vendor/bin/codecept build
     vendor/bin/codecept run
 
