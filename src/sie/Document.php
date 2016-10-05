@@ -66,6 +66,12 @@ class Document
             $number = $account["number"];
             $description = iconv_substr($account["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
             $this->renderer()->add_line("KONTO", [$number, $description]);
+            if (array_key_exists("ktyp", $account)) {
+                $this->renderer()->add_line("KTYP", [$number, $account["ktyp"]]);
+            }
+            if (array_key_exists("sru", $account)) {
+                $this->renderer()->add_line("SRU", [$number, $account["sru"]]);
+            }
         }
     }
 
