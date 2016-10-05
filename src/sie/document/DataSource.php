@@ -2,24 +2,18 @@
 
 namespace sie\document;
 
-abstract class DataSource
+abstract class DataSource implements IDataSource
 {
 
     public $program;
     public $program_version;
     public $generated_on;
     public $company_name;
-
     public $accounts = [];
     public $balance_account_numbers = [];
     public $closing_account_numbers = [];
-
-    protected $account_balances = [];
-
     public $vouchers = [];
-
     public $financial_years = [];
-
     public $dimensions = [];
 
     function __construct($hash = [])
@@ -85,6 +79,12 @@ abstract class DataSource
         return $this->closing_account_numbers;
     }
 
+    /**
+     * Used to calculate balance before (and on) the given date for an account.
+     * @param $account_number
+     * @param \DateTime $date
+     * @return mixed
+     */
     abstract public function balance_before($account_number, \DateTime $date);
 
     /**
