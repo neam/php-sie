@@ -346,8 +346,6 @@ class DocumentTest extends \Codeception\Test\Unit
             (object) [
                 "kontonr" => "1970",
                 "belopp" => "-256.5",
-                "transdat" => "",
-                "transtext" => "",
                 "objektlista" => []
             ],
             $this->indexed_voucher_entries(1)[1]->attributes

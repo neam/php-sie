@@ -6,7 +6,7 @@ class Renderer
 {
     public function add_line($label, $values)
     {
-        $this->append("#$label " . implode(" ", $this->format_values($values)));
+        $this->append("#$label " . trim(implode(" ", $this->format_values($values))));
     }
 
     public function add_beginning_of_array()
@@ -34,12 +34,28 @@ class Renderer
 
     protected function format_values($values)
     {
-        return array_map(
-            function ($value) {
-                return $this->format_value($value);
-            },
-            $values
-        );
+        $formatted_values = [];
+        $lastNonNullValueKey = 0;
+        foreach ($values as $k => $value) {
+            if ($value !== null) {
+                $lastNonNullValueKey = $k;
+            }
+        }
+        foreach ($values as $k => $value) {
+            // Any null-values that are not the last non-null value on the line need to
+            // be printed as an empty string in order to maintain positions
+            if ($value === null) {
+                if ($k >= $lastNonNullValueKey) {
+                    $formatted_value = '';
+                } else {
+                    $formatted_value = '""';
+                }
+            } else {
+                $formatted_value = $this->format_value($value);
+            }
+            $formatted_values[] = $formatted_value;
+        }
+        return $formatted_values;
     }
 
     protected function encoded($text)
@@ -62,7 +78,7 @@ class Renderer
                 $subvalues[] = $this->format_value($subvalue);
             }
             return "{" . implode(" ", $subvalues) . "}";
-        } elseif (!preg_match('/\\s/', $value) && $value !== "" && $value !== null) {
+        } elseif (!preg_match('/\\s/', $value) && $value !== "") {
             return (string) $value;
         } else {
             return '"' . (string) str_replace('"', '\"', $value) . '"';
