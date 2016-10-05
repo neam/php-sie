@@ -430,6 +430,14 @@ class DocumentTest extends \Codeception\Test\Unit
         $this->assertEquals("X", $this->indexed_entry("ver", 0)->attributes->serie);
     }
 
+    public function testExportedFileMatchesSieFileFixture()
+    {
+        $sieFilePath = codecept_data_dir('fixtures/exported_sie_file.se');
+        $actual = $this->doc()->render();
+        $expected = file_get_contents($sieFilePath);
+        $this->assertEquals($expected, $actual);
+    }
+
     protected function build_voucher($attributes)
     {
         $defaults = [
