@@ -32,7 +32,7 @@ class DocumentTest extends \Codeception\Test\Unit
 
     protected function generated_on()
     {
-        return (new DateTime())->modify('-1 day'); // Date.yesterday
+        return (new DateTime('2014-01-01'));
     }
 
     protected function accounts()
@@ -80,13 +80,13 @@ class DocumentTest extends \Codeception\Test\Unit
                 "voucher_lines" => [
                     [
                         "account_number" => 2400,
-                        "amount" => 256.0,
+                        "amount" => 256.5,
                         "booked_on" => (new DateTime())->setDate(2012, 8, 31),
                         "description" => "Payout line 1"
                     ],
                     [
                         "account_number" => 1970,
-                        "amount" => -256.0,
+                        "amount" => -256.5,
                         "booked_on" => (new DateTime())->setDate(2012, 8, 31),
                         "description" => "Payout line 2"
                     ],
@@ -245,27 +245,27 @@ class DocumentTest extends \Codeception\Test\Unit
             $this->indexed_entry_attributes("ub", 0)
         );
         $this->assertEquals(
-            (object) ["arsnr" => "0", "konto" => "1500", "saldo" => "4600.0"],
+            (object) ["arsnr" => "0", "konto" => "1500", "saldo" => "4603.64"],
             $this->indexed_entry_attributes("ub", 0)
         );
         $this->assertEquals(
-            (object) ["arsnr" => "0", "konto" => "2400", "saldo" => "5500.0"],
+            (object) ["arsnr" => "0", "konto" => "2400", "saldo" => "5503.64"],
             $this->indexed_entry_attributes("ub", 1)
         );
         $this->assertEquals(
-            (object) ["arsnr" => "-1", "konto" => "1500", "saldo" => "4600.0"],
+            (object) ["arsnr" => "-1", "konto" => "1500", "saldo" => "4603.65"],
             $this->indexed_entry_attributes("ub", 2)
         );
         $this->assertEquals(
-            (object) ["arsnr" => "-1", "konto" => "2400", "saldo" => "5500.0"],
+            (object) ["arsnr" => "-1", "konto" => "2400", "saldo" => "5503.65"],
             $this->indexed_entry_attributes("ub", 3)
         );
         $this->assertEquals(
-            (object) ["arsnr" => "-2", "konto" => "1500", "saldo" => "4600.0"],
+            (object) ["arsnr" => "-2", "konto" => "1500", "saldo" => "4603.64"],
             $this->indexed_entry_attributes("ub", 4)
         );
         $this->assertEquals(
-            (object) ["arsnr" => "-2", "konto" => "2400", "saldo" => "5500.0"],
+            (object) ["arsnr" => "-2", "konto" => "2400", "saldo" => "5503.64"],
             $this->indexed_entry_attributes("ub", 5)
         );
 
@@ -280,15 +280,15 @@ class DocumentTest extends \Codeception\Test\Unit
             $this->indexed_entry_attributes("res", 0)
         );
         $this->assertEquals(
-            (object) ["ars" => "0", "konto" => "3100", "saldo" => "6200.0"],
+            (object) ["ars" => "0", "konto" => "3100", "saldo" => "6203.64"],
             $this->indexed_entry_attributes("res", 0)
         );
         $this->assertEquals(
-            (object) ["ars" => "-1", "konto" => "3100", "saldo" => "6200.0"],
+            (object) ["ars" => "-1", "konto" => "3100", "saldo" => "6203.65"],
             $this->indexed_entry_attributes("res", 1)
         );
         $this->assertEquals(
-            (object) ["ars" => "-2", "konto" => "3100", "saldo" => "6200.0"],
+            (object) ["ars" => "-2", "konto" => "3100", "saldo" => "6203.64"],
             $this->indexed_entry_attributes("res", 2)
         );
     }
@@ -338,7 +338,7 @@ class DocumentTest extends \Codeception\Test\Unit
         $this->assertEquals(
             (object) [
                 "kontonr" => "2400",
-                "belopp" => "256.0",
+                "belopp" => "256.5",
                 "transdat" => "20120831",
                 "transtext" => "Payout line 1",
                 "objektlista" => []
@@ -348,7 +348,7 @@ class DocumentTest extends \Codeception\Test\Unit
         $this->assertEquals(
             (object) [
                 "kontonr" => "1970",
-                "belopp" => "-256.0",
+                "belopp" => "-256.5",
                 "transdat" => "20120831",
                 "transtext" => "Payout line 2",
                 "objektlista" => []
@@ -509,7 +509,7 @@ class TestDataSource extends \sie\document\DataSource
             return null;
         } else {
             # Faking a fetch based on date and number.
-            return (int) $account_number + ($date->format("j") * 100);
+            return (double) $account_number + ($date->format("j") * 100) + ($date->format("z") / 100);
         }
     }
 }
