@@ -5,6 +5,7 @@ namespace sie;
 use sie\document\DataSource;
 use sie\document\VoucherSeries;
 use sie\document\Renderer;
+use NumberFormatter;
 
 class Document
 {
@@ -116,6 +117,8 @@ class Document
                 continue;
             }
 
+            $balance = $this->formatAmount($balance);
+
             $this->renderer()->add_line($label, [$year_index, $account_number, $balance]);
         }
     }
@@ -164,7 +167,7 @@ class Document
 
         foreach ($voucher_lines as $line) {
             $account_number = $line["account_number"];
-            $amount = $line["amount"];
+            $amount = $this->formatAmount($line["amount"]);
             $booked_on = $line["booked_on"];
             if (array_key_exists("dimensions", $line)) {
                 $dimensions = $line["dimensions"];
@@ -181,7 +184,7 @@ class Document
             # Some consumers of SIE cannot handle single voucher lines (fortnox), so add another empty one to make
             # it balance. The spec just requires the sum of lines to be 0, so single lines with zero amount would conform,
             # but break for these implementations.
-            if (count($voucher_lines) < 2 && $amount === 0) {
+            if (count($voucher_lines) < 2 && $amount == 0) {
                 $this->renderer()->add_line("TRANS", [$account_number, $dimensions, $amount, $booked_on, $description]);
             }
 
@@ -189,6 +192,27 @@ class Document
 
         $this->renderer()->add_end_of_array();
 
+    }
+
+    /** @var NumberFormatter */
+    protected $numberFormatter;
+
+    protected function formatAmount($amount)
+    {
+        $formatter = $this->numberFormatter();
+        return $formatter->format((double) $amount, NumberFormatter::TYPE_DOUBLE);
+    }
+
+    /*
+     * Dot as decimal separator, no thousands separator and maximally 2 decimal places
+     * See paragraph 5.9 in the SIE file format guide (Rev. 4B).
+     */
+    protected function numberFormatter()
+    {
+        if (!$this->numberFormatter) {
+            $this->numberFormatter = new NumberFormatter('en_US', NumberFormatter::PATTERN_DECIMAL, '0.00');
+        }
+        return $this->numberFormatter;
     }
 
     /** @var Renderer */
