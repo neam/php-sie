@@ -169,7 +169,7 @@ class Document
             $account_number = $line["account_number"];
             $amount = $this->formatAmount($line["amount"]);
             if (array_key_exists("booked_on", $line)) {
-            $booked_on = $line["booked_on"];
+                $booked_on = $line["booked_on"];
             } else {
                 $booked_on = null;
             }
@@ -180,9 +180,9 @@ class Document
             }
 
             if (array_key_exists("description", $line)) {
-            # Some SIE-importers (fortnox) cannot handle descriptions longer than 200 characters,
-            # but the specification has no limit.
-            $description = iconv_substr($line["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
+                # Some SIE-importers (fortnox) cannot handle descriptions longer than 200 characters,
+                # but the specification has no limit.
+                $description = iconv_substr($line["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
             } else {
                 $description = null;
             }
