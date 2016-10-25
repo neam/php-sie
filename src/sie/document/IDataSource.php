@@ -46,7 +46,7 @@ interface IDataSource
      * @param \DateTime $date
      * @return mixed
      */
-    public function balance_before($account_number, \DateTime $date);
+    public function balance_before($account_number, \DateTime $date, $label = null, $year_index = null);
 
     /**
      * @return array

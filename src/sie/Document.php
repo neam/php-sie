@@ -109,7 +109,7 @@ class Document
     protected function add_balance_rows($label, $year_index, $account_numbers, $date)
     {
         foreach ($account_numbers as $account_number) {
-            $balance = $this->data_source->balance_before($account_number, $date);
+            $balance = $this->data_source->balance_before($account_number, $date, $label, $year_index);
 
             # Accounts with no balance should not be in the SIE-file.
             # See paragraph 5.17 in the SIE file format guide (Rev. 4B).
