@@ -28,22 +28,21 @@ Check the files in tests/unit/*Test.php for more examples.
 
 ## Parsing a SIE file
 
-You can parse sie data from anything that responds to `each_line` like a file or a string.
+You can parse sie data as follows:
 
 ```php
 $file_contents = file_get_contents('sie_file.se');
 $parser = new \sie\Parser();
 $sie_file = $parser->parseSieFileContents($file_contents);
-return $this->parse($data);
 
 // The company name
-puts sie_file.entries_with_label("fnamn").first.attributes["foretagsnamn"]
+echo $sie_file->entries_with_label("fnamn")[0]->attributes->foretagsnamn;
 
 // The first account number
-puts sie_file.entries_with_label("konto").first.attributes["kontonr"]
+echo $sie_file->entries_with_label("konto")[0]->attributes->kontonr;
 ```
 
-The parser expects file contents in CP437 encoding (the official encoding of the SIE file format). If you want to parse UTF8 strings, use the "parse" method:  
+The parseSieFileContents method expects file contents in CP437 encoding (the official encoding of the SIE file format). If you want to parse UTF8 strings, use the "parse" method:  
 
 ```php
 $sie_file = $parser->parse($utf8_string);
