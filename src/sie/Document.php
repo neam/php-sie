@@ -207,7 +207,10 @@ class Document
                     $changed_on = null;
                 }
 
-                $this->renderer()->add_line($type, [$account_number, $dimensions, $amount, $changed_on, $description, null, $changed_by]);
+                $this->renderer()->add_line(
+                    $type,
+                    [$account_number, $dimensions, $amount, $changed_on, $description, null, $changed_by]
+                );
             }
             $this->renderer()->add_line("TRANS", [$account_number, $dimensions, $amount, $booked_on, $description]);
 
