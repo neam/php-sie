@@ -66,6 +66,9 @@ class Document
         foreach ($this->data_source->accounts() as $account) {
             $number = $account["number"];
             $description = iconv_substr($account["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
+            if ($description === "") {
+                $description = null;
+            }
             $this->renderer()->add_line("KONTO", [$number, $description]);
             if (array_key_exists("ktyp", $account)) {
                 $this->renderer()->add_line("KTYP", [$number, $account["ktyp"]]);
@@ -152,6 +155,9 @@ class Document
         $number = $opts["number"];
         $booked_on = $opts["booked_on"];
         $description = iconv_substr($opts["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
+        if ($description === "") {
+            $description = null;
+        }
         $voucher_lines = $opts["voucher_lines"];
         if (array_key_exists("series", $opts)) {
             $voucher_series = $opts["series"];
@@ -183,6 +189,9 @@ class Document
                 # Some SIE-importers (fortnox) cannot handle descriptions longer than 200 characters,
                 # but the specification has no limit.
                 $description = iconv_substr($line["description"], 0, static::DESCRIPTION_LENGTH_MAX, "UTF-8");
+                if ($description === "") {
+                    $description = null;
+                }
             } else {
                 $description = null;
             }
